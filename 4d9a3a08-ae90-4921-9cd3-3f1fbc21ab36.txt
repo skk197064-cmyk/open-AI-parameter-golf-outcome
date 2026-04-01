@@ -1,0 +1,1295 @@
+
+====================================================================================================
+Running Python 3.12.11 | packaged by Anaconda, Inc. | (main, Jun  5 2025, 13:09:17) [GCC 11.2.0]
+Running PyTorch 2.8.0+cu128
+Wed Apr  1 13:54:43 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          Off |   00000000:04:00.0 Off |                    0 |
+| N/A   33C    P0            120W /  700W |    1051MiB /  81559MiB |      4%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            5957      C   ...a3/envs/cloudspace/bin/python        518MiB |
+|    0   N/A  N/A           27020      C   ...a3/envs/cloudspace/bin/python        518MiB |
++-----------------------------------------------------------------------------------------+
+
+====================================================================================================
+val_bpb:enabled tokenizer_kind=sentencepiece tokenizer_path=parameter-golf/data/tokenizers/fineweb_1024_bpe.model
+train_loader:dataset:fineweb10B_sp1024 train_shards:50
+val_loader:shards pattern=parameter-golf/data/datasets/fineweb10B_sp1024/fineweb_val_*.bin tokens:62021632
+=== TECHNIQUES ===
+  1. Weight Looping: True (period=4)
+  2. Spelling Bee: True (dim=32, buckets=512)
+  3. Spatial Attn Bias: True (max_seq=2048)
+  4. Momentum Tokens: True (decay=0.995)
+  5. SPECTRA Clipping: True (norm=2.0)
+  6. Analytic Decomp: True (rank=0.5)
+  7. ROCKET Compress: True
+  8. KAN Layers: False (layers=4,5,6,7, grid=5)
+  9. Weber\'s Law: True (C=1000.0)
+ 10. Coreset Attn: True (k=128)
+==================
+weber_law:computing token frequencies from training data...
+weber_law:applied scaling (min=0.0001 max=1.0000 mean=0.1523)
+debug_logger:ENABLED verbosity=1
+debug_logger:graphs_dir=logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+debug_logger:debug_log=logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/debug_log.txt
+momentum_tokens:proj_weights_added_to_scalar: 8
+param_check: all 76 param tensors covered, 0 orphans
+============================================================
+  TECHNIQUE INITIALIZATION VERIFICATION
+============================================================
+  [T1] Weight Looping: ENABLED
+         period=4, bank_rows=4 (period-sized, no dead rows)
+  [DEBUG] qo_bank: shape=(8, 512, 512) dtype=torch.float32 norm=45.254795 min=-0.221680 max=0.196289 mean=0.000043 shape=2*4
+  [T2] Spelling Bee: ENABLED
+  [DEBUG] trigram_embed.weight: shape=(512, 32) dtype=torch.bfloat16 norm=2.539689 min=-0.075195 max=0.080566 mean=-0.000017 init
+  [DEBUG] char_embed.weight: shape=(512, 32) dtype=torch.bfloat16 norm=2.559544 min=-0.080566 max=0.071289 mean=0.000157 init
+  [DEBUG] proj.weight: shape=(512, 32) dtype=torch.float32 norm=2.570771 min=-0.072754 max=0.074707 mean=-0.000070 init
+         scale=0.020020, buckets=512
+  [T3] Spatial Attention Bias: ENABLED
+  [DEBUG] block[0].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.342392 min=-2.000000 max=-0.500000 mean=-1.251229 max_seq=2048
+         gate_mean=0.2314
+  [DEBUG] block[1].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=168.763718 min=-2.000000 max=-0.500000 mean=-1.245281 max_seq=2048
+         gate_mean=0.2324
+  [DEBUG] block[2].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.206924 min=-2.000000 max=-0.500000 mean=-1.249152 max_seq=2048
+         gate_mean=0.2314
+  [DEBUG] block[3].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.645584 min=-2.000000 max=-0.500000 mean=-1.252795 max_seq=2048
+         gate_mean=0.2305
+  [DEBUG] block[4].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=168.998657 min=-2.000000 max=-0.500000 mean=-1.247453 max_seq=2048
+         gate_mean=0.2314
+  [DEBUG] block[5].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.197647 min=-2.000000 max=-0.500000 mean=-1.249403 max_seq=2048
+         gate_mean=0.2314
+  [DEBUG] block[6].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.198929 min=-2.000000 max=-0.500000 mean=-1.249079 max_seq=2048
+         gate_mean=0.2314
+  [DEBUG] block[7].gate_embed.weight: shape=(2048, 8) dtype=torch.bfloat16 norm=169.346344 min=-2.000000 max=-0.500000 mean=-1.250334 max_seq=2048
+         gate_mean=0.2314
+  [T4] Momentum Tokens: ENABLED
+  [DEBUG] block[0].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627567 min=-0.201172 max=0.201172 mean=0.000005 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[1].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627333 min=-0.187500 max=0.190430 mean=0.000170 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[2].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627378 min=-0.196289 max=0.195312 mean=-0.000056 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[3].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627581 min=-0.208984 max=0.194336 mean=0.000140 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[4].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627319 min=-0.190430 max=0.189453 mean=-0.000037 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[5].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627647 min=-0.238281 max=0.187500 mean=-0.000038 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[6].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627434 min=-0.193359 max=0.196289 mean=-0.000129 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [DEBUG] block[7].momentum.proj.weight: shape=(512, 512) dtype=torch.float32 norm=22.627377 min=-0.191406 max=0.192383 mean=-0.000018 init
+         gate=-3.000000, decay=0.995, buf_norm=0.000000
+  [T5] SPECTRA Clipping: ENABLED, norm=2.0
+  [T6] Analytic Decomposition: ENABLED, rank_ratio=0.5
+  [T7] ROCKET Compression: ENABLED
+  [T9] Weber's Law: ENABLED, C=1000.0
+  [T10] Coreset Attention: DISABLED (causal incompatibility)
+  [BASE] BigramHashEmbedding: ENABLED
+  [DEBUG] bigram.embed.weight: shape=(2048, 64) dtype=torch.bfloat16 norm=7.217281 min=-0.089844 max=0.093262 mean=0.000048 init
+  [DEBUG] bigram.proj.weight: shape=(512, 64) dtype=torch.float32 norm=8.000072 min=-0.175781 max=0.175781 mean=-0.000100 init
+  [BASE] ValueEmbedding: ENABLED
+  [DEBUG] ve_shared.embed.weight: shape=(1024, 64) dtype=torch.bfloat16 norm=2.567308 min=-0.045166 max=0.041260 mean=0.000038 init
+  [DEBUG] ve_shared.proj.weight: shape=(256, 64) dtype=torch.float32 norm=8.000093 min=-0.230469 max=0.253906 mean=-0.000017 init
+============================================================
+model_params:14076493
+mtp_num_heads:0 mtp_loss_weight:0.2 mtp_params:0
+XSA:last_3 active_layers:[5, 6, 7]
+weight_looping:True period:4
+kan_layers:set() (KAN DISABLED — removed for stability)
+world_size:1 grad_accum_steps:8
+tie_embeddings:True embed_lr:0.035 head_lr:0.0 matrix_lr:0.025 scalar_lr:0.025
+train_batch_tokens:262144 train_seq_len:1024 iterations:25000 warmup_steps:100 max_wallclock_seconds:9999999.000
+checkpoint_every:2000 checkpoint_dir:checkpoints
+warmup_step:10/100
+warmup_step:20/100
+warmup_step:30/100
+warmup_step:40/100
+warmup_step:50/100
+warmup_step:60/100
+warmup_step:70/100
+warmup_step:80/100
+warmup_step:90/100
+warmup_step:100/100
+step:0/25000 val_loss:6.9324 val_bpb:4.1057 train_time:0ms step_avg:0.01ms
+late_qat:enabled step:0 scale:0.0000
+  [T4] block[0] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[1] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[2] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[3] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[4] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[5] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[6] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+  [T4] block[7] momentum UPDATE: buf_norm=0.002395 buf_mean_abs=0.00008547 gate=0.047426
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 1
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=0.006130 min=-0.000154 max=0.000149 mean=-0.000000 tokens_range=[260,1002]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=0.260261 min=-0.001625 max=0.001701 mean=-0.000001 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=0.050162 min=-0.000340 max=0.000395 mean=-0.000000 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=524.752930 min=-3.140625 max=3.218750 mean=-0.002389 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[0] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002426
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1021.947144 min=510.000000 max=724.000000 mean=581.333374 
+  [T3] block[0] spatial_bias: gate_mean=0.2305, gate_std=0.0747, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[1] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002426
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=722.041565 min=360.000000 max=512.000000 mean=410.666687 
+  [T3] block[1] spatial_bias: gate_mean=0.2314, gate_std=0.0747, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[2] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002487
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=590.572632 min=294.000000 max=418.000000 mean=336.000000 
+  [T3] block[2] spatial_bias: gate_mean=0.2305, gate_std=0.0747, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[3] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002426
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=511.473358 min=255.000000 max=362.000000 mean=291.000000 
+  [T3] block[3] spatial_bias: gate_mean=0.2314, gate_std=0.0752, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[4] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002426
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=457.103912 min=228.000000 max=324.000000 mean=260.000000 
+  [T3] block[4] spatial_bias: gate_mean=0.2314, gate_std=0.0752, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[5] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002426
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=417.305634 min=208.000000 max=296.000000 mean=237.333344 
+  [T3] block[5] spatial_bias: gate_mean=0.2305, gate_std=0.0747, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[6] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002457
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=387.247986 min=193.000000 max=274.000000 mean=220.333344 
+  [T3] block[6] spatial_bias: gate_mean=0.2314, gate_std=0.0752, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [T4] block[7] momentum: buf_norm=0.002395, gate=0.0474, proj_norm=0.002441
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=362.019348 min=181.000000 max=256.000000 mean=206.000000 
+  [T3] block[7] spatial_bias: gate_mean=0.2314, gate_std=0.0752, gate_range=[0.1191,0.3770]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=370.195709 min=-2.437500 max=2.593750 mean=-0.002391 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 1
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000527 g_max=0.000015 g_mean=-0.00000101
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.000937 g_max=0.000106 g_mean=-0.00000101
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.000821 g_max=0.000045 g_mean=0.00000001
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.000482 g_max=0.000482 g_mean=-0.00048234
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.398564 g_max=0.019531 g_mean=-0.00000437
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.002343 g_max=0.000101 g_mean=0.00000082
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.001276 g_max=0.000072 g_mean=-0.00000001
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000000 g_max=0.000000 g_mean=0.00000000
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:1/25000 train_loss:6.9324 grad_norm:0.3985 lr_scale:0.0000 muon_mom:0.9200 train_time:380ms step_avg:380.27ms
+  [TRAIN] step:1 loss:6.9324 lr_scale:0.0000 grad_norm:0.3985 muon_mom:0.9200 time:380ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:2/25000 train_loss:6.9324 grad_norm:0.4063 lr_scale:0.0100 muon_mom:0.9200 train_time:2520ms step_avg:1259.77ms
+  [TRAIN] step:2 loss:6.9324 lr_scale:0.0100 grad_norm:0.4063 muon_mom:0.9200 time:2520ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:3/25000 train_loss:6.8743 grad_norm:1.2799 lr_scale:0.0200 muon_mom:0.9201 train_time:4647ms step_avg:1548.95ms
+  [TRAIN] step:3 loss:6.8743 lr_scale:0.0200 grad_norm:1.2799 muon_mom:0.9201 time:4647ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:4/25000 train_loss:6.6937 grad_norm:1.2074 lr_scale:0.0300 muon_mom:0.9201 train_time:7500ms step_avg:1874.95ms
+  [TRAIN] step:4 loss:6.6937 lr_scale:0.0300 grad_norm:1.2074 muon_mom:0.9201 time:7500ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:5/25000 train_loss:6.4659 grad_norm:1.0311 lr_scale:0.0400 muon_mom:0.9201 train_time:9619ms step_avg:1923.89ms
+  [TRAIN] step:5 loss:6.4659 lr_scale:0.0400 grad_norm:1.0311 muon_mom:0.9201 time:9619ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:6/25000 train_loss:6.2625 grad_norm:0.8901 lr_scale:0.0500 muon_mom:0.9201 train_time:11694ms step_avg:1949.01ms
+  [TRAIN] step:6 loss:6.2625 lr_scale:0.0500 grad_norm:0.8901 muon_mom:0.9201 time:11694ms
+step:7/25000 train_loss:6.1269 grad_norm:0.7109 lr_scale:0.0600 muon_mom:0.9202 train_time:11894ms step_avg:1699.17ms
+  [TRAIN] step:7 loss:6.1269 lr_scale:0.0600 grad_norm:0.7109 muon_mom:0.9202 time:11894ms
+step:8/25000 train_loss:6.0267 grad_norm:0.6122 lr_scale:0.0700 muon_mom:0.9202 train_time:12094ms step_avg:1511.81ms
+  [TRAIN] step:8 loss:6.0267 lr_scale:0.0700 grad_norm:0.6122 muon_mom:0.9202 time:12094ms
+step:9/25000 train_loss:6.0259 grad_norm:0.5762 lr_scale:0.0800 muon_mom:0.9202 train_time:12295ms step_avg:1366.12ms
+  [TRAIN] step:9 loss:6.0259 lr_scale:0.0800 grad_norm:0.5762 muon_mom:0.9202 time:12295ms
+step:10/25000 train_loss:6.0297 grad_norm:0.9295 lr_scale:0.0900 muon_mom:0.9203 train_time:12496ms step_avg:1249.58ms
+  [TRAIN] step:10 loss:6.0297 lr_scale:0.0900 grad_norm:0.9295 muon_mom:0.9203 time:12496ms
+  [T4] block[0] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.049654
+  [T4] block[1] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051097
+  [T4] block[2] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051673
+  [T4] block[3] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051712
+  [T4] block[4] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051443
+  [T4] block[5] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051697
+  [T4] block[6] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051623
+  [T4] block[7] momentum UPDATE: buf_norm=3.336615 buf_mean_abs=0.14212145 gate=0.051485
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 50
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=28.253181 min=-0.296875 max=0.248047 mean=-0.000505 tokens_range=[1,1015]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=21.188047 min=-0.209961 max=0.249023 mean=-0.000125 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=58.181149 min=-0.453125 max=0.423828 mean=-0.001860 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.073792 min=-4.843750 max=5.093750 mean=-0.014146 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=578.968201 min=-3.718750 max=3.468750 mean=-0.014131 
+  [T4] block[0] momentum: buf_norm=3.336615, gate=0.0497, proj_norm=62.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=593.214905 min=-3.734375 max=3.484375 mean=-0.012724 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1026.857300 min=486.000000 max=704.000000 mean=586.000000 
+  [T3] block[0] spatial_bias: gate_mean=0.2461, gate_std=0.0781, gate_range=[0.1069,0.4219]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=593.214905 min=-3.734375 max=3.484375 mean=-0.012724 
+  [T4] block[1] momentum: buf_norm=3.336615, gate=0.0511, proj_norm=74.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=616.790588 min=-3.734375 max=3.500000 mean=-0.011140 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=728.755127 min=338.000000 max=502.000000 mean=415.333344 
+  [T3] block[1] spatial_bias: gate_mean=0.2441, gate_std=0.0781, gate_range=[0.1201,0.4160]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=616.790588 min=-3.734375 max=3.500000 mean=-0.011140 
+  [T4] block[2] momentum: buf_norm=3.336615, gate=0.0517, proj_norm=78.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=644.524414 min=-3.734375 max=3.750000 mean=-0.010097 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=600.366577 min=286.000000 max=412.000000 mean=342.666687 
+  [T3] block[2] spatial_bias: gate_mean=0.2412, gate_std=0.0781, gate_range=[0.1191,0.4141]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=644.524414 min=-3.734375 max=3.750000 mean=-0.010097 
+  [T4] block[3] momentum: buf_norm=3.336615, gate=0.0517, proj_norm=75.500000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=673.023499 min=-3.734375 max=4.031250 mean=-0.008622 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=517.456299 min=241.000000 max=356.000000 mean=295.000000 
+  [T3] block[3] spatial_bias: gate_mean=0.2393, gate_std=0.0776, gate_range=[0.1191,0.4082]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=673.023499 min=-3.734375 max=4.031250 mean=-0.008622 
+  [T4] block[4] momentum: buf_norm=3.336615, gate=0.0514, proj_norm=67.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=698.795776 min=-3.734375 max=4.281250 mean=-0.006950 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=456.785522 min=214.000000 max=316.000000 mean=260.333344 
+  [T3] block[4] spatial_bias: gate_mean=0.2363, gate_std=0.0781, gate_range=[0.1191,0.4004]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=698.795776 min=-3.734375 max=4.281250 mean=-0.006950 
+  [T4] block[5] momentum: buf_norm=3.336615, gate=0.0517, proj_norm=68.000000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=726.284607 min=-3.734375 max=4.531250 mean=-0.005415 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=418.277405 min=190.000000 max=290.000000 mean=238.000000 
+  [T3] block[5] spatial_bias: gate_mean=0.2422, gate_std=0.0791, gate_range=[0.1191,0.4062]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=726.284607 min=-3.734375 max=4.531250 mean=-0.005415 
+  [T4] block[6] momentum: buf_norm=3.336615, gate=0.0516, proj_norm=68.500000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=754.875671 min=-3.718750 max=4.781250 mean=-0.003923 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=389.749908 min=184.000000 max=268.000000 mean=222.333344 
+  [T3] block[6] spatial_bias: gate_mean=0.2461, gate_std=0.0796, gate_range=[0.1211,0.4062]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=754.875671 min=-3.718750 max=4.781250 mean=-0.003923 
+  [T4] block[7] momentum: buf_norm=3.336615, gate=0.0515, proj_norm=68.500000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=784.456970 min=-3.703125 max=5.031250 mean=-0.002574 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=364.145569 min=167.000000 max=252.000000 mean=207.333344 
+  [T3] block[7] spatial_bias: gate_mean=0.2461, gate_std=0.0801, gate_range=[0.1211,0.4102]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=784.456970 min=-3.703125 max=5.031250 mean=-0.002574 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=784.456970 min=-3.703125 max=5.031250 mean=-0.002574 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 50
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.017434 g_max=0.002457 g_mean=-0.00000399
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.032322 g_max=0.003754 g_mean=-0.00000400
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.019193 g_max=0.001714 g_mean=-0.00000036
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.062921 g_max=0.062921 g_mean=0.06292079
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000095 g_max=0.000011 g_mean=-0.00000018
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000050 g_max=0.000003 g_mean=-0.00000014
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000030 g_max=0.000002 g_mean=-0.00000007
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000016 g_max=0.000001 g_mean=-0.00000004
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000006 g_max=0.000001 g_mean=-0.00000001
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000006 g_max=0.000000 g_mean=-0.00000002
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000012 g_max=0.000000 g_mean=-0.00000006
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000012 g_max=0.000001 g_mean=-0.00000006
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.001318 g_max=0.000024 g_mean=-0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.000140 g_max=0.000140 g_mean=-0.00014037
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.000942 g_max=0.000017 g_mean=-0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.004492 g_max=0.004492 g_mean=-0.00449164
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.000696 g_max=0.000012 g_mean=-0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.004449 g_max=0.004449 g_mean=-0.00444927
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000460 g_max=0.000007 g_mean=-0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.003093 g_max=0.003093 g_mean=-0.00309298
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000227 g_max=0.000003 g_mean=-0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.001448 g_max=0.001448 g_mean=-0.00144822
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000230 g_max=0.000003 g_mean=-0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.001557 g_max=0.001557 g_mean=-0.00155720
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000233 g_max=0.000003 g_mean=-0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.001648 g_max=0.001648 g_mean=-0.00164785
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000238 g_max=0.000003 g_mean=-0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.001723 g_max=0.001723 g_mean=-0.00172310
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.367514 g_max=0.083008 g_mean=0.00000010
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.016223 g_max=0.002258 g_mean=0.00000069
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.013018 g_max=0.000957 g_mean=-0.00000011
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.000119 g_max=0.000007 g_mean=0.00000001
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000112 g_max=0.000006 g_mean=0.00000000
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+  [T4] block[0] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.042284
+  [T4] block[1] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.050497
+  [T4] block[2] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.054041
+  [T4] block[3] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.055691
+  [T4] block[4] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.056191
+  [T4] block[5] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.056360
+  [T4] block[6] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.056154
+  [T4] block[7] momentum UPDATE: buf_norm=4.119260 buf_mean_abs=0.17422336 gate=0.055653
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 100
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=61.231468 min=-0.628906 max=0.466797 mean=-0.000342 tokens_range=[1,1013]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=41.586273 min=-0.316406 max=0.320312 mean=0.000228 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=62.967377 min=-0.769531 max=0.703125 mean=-0.001378 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.072937 min=-4.406250 max=4.656250 mean=-0.008139 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=551.861206 min=-3.531250 max=3.765625 mean=-0.008151 
+  [T4] block[0] momentum: buf_norm=4.119260, gate=0.0423, proj_norm=89.500000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=546.054688 min=-3.500000 max=3.750000 mean=-0.007627 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1070.693237 min=528.000000 max=732.000000 mean=612.000000 
+  [T3] block[0] spatial_bias: gate_mean=0.2676, gate_std=0.0610, gate_range=[0.0518,0.4395]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=546.054688 min=-3.500000 max=3.750000 mean=-0.007627 
+  [T4] block[1] momentum: buf_norm=4.119260, gate=0.0505, proj_norm=55.250000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=550.720520 min=-3.531250 max=3.734375 mean=-0.006961 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=758.580261 min=370.000000 max=512.000000 mean=434.000000 
+  [T3] block[1] spatial_bias: gate_mean=0.2598, gate_std=0.0708, gate_range=[0.0708,0.4766]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=550.720520 min=-3.531250 max=3.734375 mean=-0.006961 
+  [T4] block[2] momentum: buf_norm=4.119260, gate=0.0540, proj_norm=84.500000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=565.262085 min=-3.562500 max=3.718750 mean=-0.004325 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=621.536804 min=306.000000 max=424.000000 mean=355.333344 
+  [T3] block[2] spatial_bias: gate_mean=0.2500, gate_std=0.0737, gate_range=[0.0618,0.4570]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=565.262085 min=-3.562500 max=3.718750 mean=-0.004325 
+  [T4] block[3] momentum: buf_norm=4.119260, gate=0.0557, proj_norm=99.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=587.924622 min=-3.578125 max=3.687500 mean=-0.001681 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=545.732544 min=268.000000 max=372.000000 mean=312.000000 
+  [T3] block[3] spatial_bias: gate_mean=0.2480, gate_std=0.0771, gate_range=[0.0583,0.4883]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=587.924622 min=-3.578125 max=3.687500 mean=-0.001681 
+  [T4] block[4] momentum: buf_norm=4.119260, gate=0.0562, proj_norm=103.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=616.611816 min=-3.625000 max=4.093750 mean=0.001794 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=481.287842 min=241.000000 max=334.000000 mean=274.666687 
+  [T3] block[4] spatial_bias: gate_mean=0.2314, gate_std=0.0757, gate_range=[0.0674,0.4688]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=616.611816 min=-3.625000 max=4.093750 mean=0.001794 
+  [T4] block[5] momentum: buf_norm=4.119260, gate=0.0564, proj_norm=106.500000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=651.814087 min=-3.671875 max=4.750000 mean=0.005311 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=439.743103 min=223.000000 max=302.000000 mean=251.333344 
+  [T3] block[5] spatial_bias: gate_mean=0.2637, gate_std=0.0830, gate_range=[0.1035,0.4961]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=651.814087 min=-3.671875 max=4.750000 mean=0.005311 
+  [T4] block[6] momentum: buf_norm=4.119260, gate=0.0562, proj_norm=109.500000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=692.899902 min=-3.796875 max=5.437500 mean=0.009169 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=414.166626 min=211.000000 max=278.000000 mean=237.333344 
+  [T3] block[6] spatial_bias: gate_mean=0.2988, gate_std=0.0854, gate_range=[0.1338,0.5312]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=692.899902 min=-3.796875 max=5.437500 mean=0.009169 
+  [T4] block[7] momentum: buf_norm=4.119260, gate=0.0557, proj_norm=109.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=737.492004 min=-3.921875 max=6.093750 mean=0.013238 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=394.979736 min=194.000000 max=262.000000 mean=226.333344 
+  [T3] block[7] spatial_bias: gate_mean=0.3027, gate_std=0.0850, gate_range=[0.1211,0.5391]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=737.492004 min=-3.921875 max=6.093750 mean=0.013238 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=737.492004 min=-3.921875 max=6.093750 mean=0.013238 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 100
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.009265 g_max=0.000395 g_mean=-0.00000375
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.020532 g_max=0.004120 g_mean=-0.00000375
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.025948 g_max=0.004322 g_mean=0.00000257
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.162957 g_max=0.162957 g_mean=0.16295686
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000373 g_max=0.000033 g_mean=0.00000011
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000194 g_max=0.000016 g_mean=-0.00000004
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000126 g_max=0.000012 g_mean=0.00000012
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000072 g_max=0.000005 g_mean=0.00000001
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000016 g_max=0.000001 g_mean=0.00000001
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000018 g_max=0.000001 g_mean=0.00000000
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000075 g_max=0.000004 g_mean=-0.00000004
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000111 g_max=0.000007 g_mean=-0.00000010
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.004574 g_max=0.000092 g_mean=-0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.009766 g_max=0.009766 g_mean=0.00976631
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.003199 g_max=0.000097 g_mean=0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.011079 g_max=0.011079 g_mean=0.01107900
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.002265 g_max=0.000077 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.007265 g_max=0.007265 g_mean=0.00726491
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.001402 g_max=0.000046 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.002558 g_max=0.002558 g_mean=0.00255817
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000669 g_max=0.000016 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.000456 g_max=0.000456 g_mean=-0.00045572
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000678 g_max=0.000013 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000950 g_max=0.000950 g_mean=-0.00095026
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000706 g_max=0.000013 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.001461 g_max=0.001461 g_mean=-0.00146146
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000748 g_max=0.000012 g_mean=0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.001987 g_max=0.001987 g_mean=-0.00198690
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.329006 g_max=0.192383 g_mean=0.00000143
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.011433 g_max=0.000702 g_mean=-0.00000130
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.015028 g_max=0.001664 g_mean=0.00000014
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.003227 g_max=0.000448 g_mean=0.00000012
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.002227 g_max=0.000092 g_mean=-0.00000003
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:100/25000 train_loss:3.6499 grad_norm:0.6179 lr_scale:0.9900 muon_mom:0.9228 train_time:30495ms step_avg:304.95ms
+  [TRAIN] step:100 loss:3.6499 lr_scale:0.9900 grad_norm:0.6179 muon_mom:0.9228 time:30495ms
+step:200/25000 train_loss:2.9698 grad_norm:0.2933 lr_scale:1.0000 muon_mom:0.9256 train_time:50427ms step_avg:252.14ms
+  [TRAIN] step:200 loss:2.9698 lr_scale:1.0000 grad_norm:0.2933 muon_mom:0.9256 time:50427ms
+step:250/25000 val_loss:2.8292 val_bpb:1.6756 train_time:60401ms step_avg:241.60ms
+step:300/25000 train_loss:2.7892 grad_norm:0.2124 lr_scale:0.9999 muon_mom:0.9284 train_time:70365ms step_avg:234.55ms
+  [TRAIN] step:300 loss:2.7892 lr_scale:0.9999 grad_norm:0.2124 muon_mom:0.9284 time:70365ms
+step:400/25000 train_loss:2.6112 grad_norm:0.2289 lr_scale:0.9997 muon_mom:0.9312 train_time:90356ms step_avg:225.89ms
+  [TRAIN] step:400 loss:2.6112 lr_scale:0.9997 grad_norm:0.2289 muon_mom:0.9312 time:90356ms
+  [T4] block[0] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.097913
+  [T4] block[1] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.078212
+  [T4] block[2] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.091740
+  [T4] block[3] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.094504
+  [T4] block[4] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.082352
+  [T4] block[5] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.063331
+  [T4] block[6] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.047472
+  [T4] block[7] momentum UPDATE: buf_norm=3.133412 buf_mean_abs=0.12155746 gate=0.038684
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 500
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=233.007919 min=-1.703125 max=1.796875 mean=-0.000710 tokens_range=[1,1015]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=113.439453 min=-1.359375 max=0.933594 mean=-0.000240 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=91.692024 min=-1.218750 max=1.156250 mean=0.000035 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.077332 min=-5.031250 max=5.906250 mean=-0.001654 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=607.944153 min=-4.875000 max=5.406250 mean=-0.001634 
+  [T4] block[0] momentum: buf_norm=3.133412, gate=0.0979, proj_norm=165.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=646.761658 min=-4.812500 max=5.562500 mean=-0.001394 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1773.263672 min=948.000000 max=1144.000000 mean=1020.000000 
+  [T3] block[0] spatial_bias: gate_mean=0.3223, gate_std=0.0859, gate_range=[0.0179,0.5469]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=646.761658 min=-4.812500 max=5.562500 mean=-0.001394 
+  [T4] block[1] momentum: buf_norm=3.133412, gate=0.0782, proj_norm=115.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=664.799194 min=-4.906250 max=5.687500 mean=-0.005491 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1271.723267 min=648.000000 max=824.000000 mean=730.666687 
+  [T3] block[1] spatial_bias: gate_mean=0.3320, gate_std=0.0771, gate_range=[0.0159,0.5430]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=664.799194 min=-4.906250 max=5.687500 mean=-0.005491 
+  [T4] block[2] momentum: buf_norm=3.133412, gate=0.0917, proj_norm=124.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=692.618958 min=-5.187500 max=5.468750 mean=0.001637 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1078.443359 min=532.000000 max=704.000000 mean=618.666687 
+  [T3] block[2] spatial_bias: gate_mean=0.3379, gate_std=0.0549, gate_range=[0.0159,0.4668]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=692.618958 min=-5.187500 max=5.468750 mean=0.001637 
+  [T4] block[3] momentum: buf_norm=3.133412, gate=0.0945, proj_norm=123.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=726.517395 min=-5.375000 max=5.093750 mean=-0.002633 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1022.326782 min=496.000000 max=644.000000 mean=586.666687 
+  [T3] block[3] spatial_bias: gate_mean=0.3594, gate_std=0.0767, gate_range=[0.0179,0.5469]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=726.517395 min=-5.375000 max=5.093750 mean=-0.002633 
+  [T4] block[4] momentum: buf_norm=3.133412, gate=0.0824, proj_norm=75.500000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=720.013000 min=-5.343750 max=5.125000 mean=0.000847 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=977.459961 min=382.000000 max=652.000000 mean=551.333374 
+  [T3] block[4] spatial_bias: gate_mean=0.2539, gate_std=0.0806, gate_range=[0.0386,0.8516]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=720.013000 min=-5.343750 max=5.125000 mean=0.000847 
+  [T4] block[5] momentum: buf_norm=3.133412, gate=0.0633, proj_norm=74.500000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=718.922241 min=-5.312500 max=5.812500 mean=0.003673 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=840.042847 min=362.000000 max=568.000000 mean=477.333344 
+  [T3] block[5] spatial_bias: gate_mean=0.3887, gate_std=0.0718, gate_range=[0.0942,0.6328]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=718.922241 min=-5.312500 max=5.812500 mean=0.003673 
+  [T4] block[6] momentum: buf_norm=3.133412, gate=0.0475, proj_norm=68.000000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=720.756775 min=-5.250000 max=6.375000 mean=0.006160 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=825.343567 min=334.000000 max=560.000000 mean=466.666687 
+  [T3] block[6] spatial_bias: gate_mean=0.3984, gate_std=0.0493, gate_range=[0.0874,0.5586]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=720.756775 min=-5.250000 max=6.375000 mean=0.006160 
+  [T4] block[7] momentum: buf_norm=3.133412, gate=0.0387, proj_norm=65.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=725.638000 min=-5.187500 max=6.906250 mean=0.008036 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=765.174500 min=344.000000 max=500.000000 mean=436.666687 
+  [T3] block[7] spatial_bias: gate_mean=0.3848, gate_std=0.0469, gate_range=[0.1279,0.5430]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=725.638000 min=-5.187500 max=6.906250 mean=0.008036 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=725.638000 min=-5.187500 max=6.906250 mean=0.008036 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 500
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000797 g_max=0.000029 g_mean=0.00000000
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.001087 g_max=0.000093 g_mean=0.00000000
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.002509 g_max=0.000122 g_mean=0.00000010
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.010588 g_max=0.010588 g_mean=-0.01058795
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000801 g_max=0.000061 g_mean=-0.00000012
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000501 g_max=0.000030 g_mean=0.00000002
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000397 g_max=0.000023 g_mean=0.00000012
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000413 g_max=0.000031 g_mean=0.00000011
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000021 g_max=0.000002 g_mean=-0.00000003
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000117 g_max=0.000009 g_mean=-0.00000017
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000249 g_max=0.000024 g_mean=0.00000011
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000277 g_max=0.000025 g_mean=0.00000006
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.001943 g_max=0.000043 g_mean=-0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.015181 g_max=0.015181 g_mean=-0.01518141
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.001248 g_max=0.000027 g_mean=-0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.004460 g_max=0.004460 g_mean=-0.00445952
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.000989 g_max=0.000025 g_mean=-0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.005449 g_max=0.005449 g_mean=-0.00544862
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000546 g_max=0.000019 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.003529 g_max=0.003529 g_mean=-0.00352920
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000161 g_max=0.000007 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.000323 g_max=0.000323 g_mean=-0.00032256
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000172 g_max=0.000005 g_mean=-0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000104 g_max=0.000104 g_mean=-0.00010354
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000202 g_max=0.000004 g_mean=-0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000004 g_max=0.000004 g_mean=0.00000350
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000344 g_max=0.000006 g_mean=-0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000116 g_max=0.000116 g_mean=0.00011647
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.121530 g_max=0.035400 g_mean=-0.00000004
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.001747 g_max=0.000048 g_mean=0.00000005
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.002387 g_max=0.000094 g_mean=-0.00000008
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.000770 g_max=0.000063 g_mean=-0.00000003
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000962 g_max=0.000036 g_mean=0.00000001
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:500/25000 train_loss:2.6252 grad_norm:0.1933 lr_scale:0.9994 muon_mom:0.9340 train_time:110315ms step_avg:220.63ms
+  [TRAIN] step:500 loss:2.6252 lr_scale:0.9994 grad_norm:0.1933 muon_mom:0.9340 time:110315ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:500/25000 val_loss:2.6082 val_bpb:1.5447 train_time:112273ms step_avg:224.55ms
+step:600/25000 train_loss:2.5726 grad_norm:0.1755 lr_scale:0.9991 muon_mom:0.9368 train_time:132213ms step_avg:220.35ms
+  [TRAIN] step:600 loss:2.5726 lr_scale:0.9991 grad_norm:0.1755 muon_mom:0.9368 time:132213ms
+step:700/25000 train_loss:2.5337 grad_norm:0.2530 lr_scale:0.9986 muon_mom:0.9396 train_time:152168ms step_avg:217.38ms
+  [TRAIN] step:700 loss:2.5337 lr_scale:0.9986 grad_norm:0.2530 muon_mom:0.9396 time:152168ms
+step:750/25000 val_loss:2.5435 val_bpb:1.5064 train_time:162138ms step_avg:216.18ms
+step:800/25000 train_loss:2.3605 grad_norm:0.2363 lr_scale:0.9982 muon_mom:0.9424 train_time:172165ms step_avg:215.21ms
+  [TRAIN] step:800 loss:2.3605 lr_scale:0.9982 grad_norm:0.2363 muon_mom:0.9424 time:172165ms
+step:900/25000 train_loss:2.4840 grad_norm:0.2235 lr_scale:0.9976 muon_mom:0.9452 train_time:192085ms step_avg:213.43ms
+  [TRAIN] step:900 loss:2.4840 lr_scale:0.9976 grad_norm:0.2235 muon_mom:0.9452 time:192085ms
+  [T4] block[0] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.178793
+  [T4] block[1] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.119103
+  [T4] block[2] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.150171
+  [T4] block[3] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.147664
+  [T4] block[4] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.094853
+  [T4] block[5] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.058036
+  [T4] block[6] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.022615
+  [T4] block[7] momentum UPDATE: buf_norm=2.675927 buf_mean_abs=0.09683889 gate=0.015734
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 1000
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=299.232056 min=-2.046875 max=2.125000 mean=-0.001430 tokens_range=[260,1013]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=132.779419 min=-1.148438 max=1.062500 mean=0.000812 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=89.710464 min=-1.164062 max=1.164062 mean=-0.001050 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.089539 min=-4.875000 max=5.250000 mean=-0.003195 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=619.523743 min=-4.625000 max=4.656250 mean=-0.003152 
+  [T4] block[0] momentum: buf_norm=2.675927, gate=0.1788, proj_norm=152.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=705.216919 min=-5.125000 max=4.625000 mean=0.002074 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2224.891846 min=1192.000000 max=1432.000000 mean=1280.000000 
+  [T3] block[0] spatial_bias: gate_mean=0.3809, gate_std=0.0859, gate_range=[0.0179,0.6055]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=705.216919 min=-5.125000 max=4.625000 mean=0.002074 
+  [T4] block[1] momentum: buf_norm=2.675927, gate=0.1191, proj_norm=115.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=750.117310 min=-5.562500 max=5.375000 mean=-0.003780 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1745.618530 min=780.000000 max=1128.000000 mean=996.000000 
+  [T3] block[1] spatial_bias: gate_mean=0.4004, gate_std=0.0825, gate_range=[0.0164,0.5977]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=750.117310 min=-5.562500 max=5.375000 mean=-0.003780 
+  [T4] block[2] momentum: buf_norm=2.675927, gate=0.1502, proj_norm=120.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=818.045776 min=-5.625000 max=6.218750 mean=0.003561 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1490.734009 min=628.000000 max=960.000000 mean=846.666687 
+  [T3] block[2] spatial_bias: gate_mean=0.4102, gate_std=0.0659, gate_range=[0.0159,0.5508]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=818.045776 min=-5.625000 max=6.218750 mean=0.003561 
+  [T4] block[3] momentum: buf_norm=2.675927, gate=0.1477, proj_norm=120.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=885.192932 min=-6.343750 max=6.500000 mean=0.000206 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1394.996826 min=544.000000 max=932.000000 mean=786.666687 
+  [T3] block[3] spatial_bias: gate_mean=0.4180, gate_std=0.0796, gate_range=[0.0226,0.6016]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=885.192932 min=-6.343750 max=6.500000 mean=0.000206 
+  [T4] block[4] momentum: buf_norm=2.675927, gate=0.0949, proj_norm=87.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=892.773438 min=-6.218750 max=6.718750 mean=-0.004005 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1377.499146 min=444.000000 max=932.000000 mean=762.666687 
+  [T3] block[4] spatial_bias: gate_mean=0.3281, gate_std=0.0947, gate_range=[0.0361,0.9531]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=892.773438 min=-6.218750 max=6.718750 mean=-0.004005 
+  [T4] block[5] momentum: buf_norm=2.675927, gate=0.0580, proj_norm=84.500000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=898.994568 min=-6.156250 max=7.156250 mean=-0.007194 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1383.034302 min=440.000000 max=972.000000 mean=764.000000 
+  [T3] block[5] spatial_bias: gate_mean=0.4492, gate_std=0.0874, gate_range=[0.1128,0.6953]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=898.994568 min=-6.156250 max=7.156250 mean=-0.007194 
+  [T4] block[6] momentum: buf_norm=2.675927, gate=0.0226, proj_norm=65.500000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=897.978088 min=-6.125000 max=7.343750 mean=-0.006447 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1401.252319 min=378.000000 max=968.000000 mean=762.000000 
+  [T3] block[6] spatial_bias: gate_mean=0.4473, gate_std=0.0635, gate_range=[0.0535,0.6289]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=897.978088 min=-6.125000 max=7.343750 mean=-0.006447 
+  [T4] block[7] momentum: buf_norm=2.675927, gate=0.0157, proj_norm=69.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=896.839783 min=-6.125000 max=7.531250 mean=-0.006034 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=1172.109253 min=380.000000 max=792.000000 mean=649.333374 
+  [T3] block[7] spatial_bias: gate_mean=0.4199, gate_std=0.0649, gate_range=[0.0952,0.6289]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=896.839783 min=-6.125000 max=7.531250 mean=-0.006034 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=896.839783 min=-6.125000 max=7.531250 mean=-0.006034 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 1000
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000485 g_max=0.000017 g_mean=0.00000015
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.000610 g_max=0.000057 g_mean=0.00000015
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.001339 g_max=0.000103 g_mean=0.00000006
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.033434 g_max=0.033434 g_mean=0.03343362
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000632 g_max=0.000049 g_mean=0.00000009
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000469 g_max=0.000033 g_mean=0.00000006
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000426 g_max=0.000022 g_mean=-0.00000007
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000394 g_max=0.000031 g_mean=0.00000005
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000028 g_max=0.000002 g_mean=-0.00000000
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000142 g_max=0.000008 g_mean=-0.00000008
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000262 g_max=0.000015 g_mean=-0.00000004
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000325 g_max=0.000020 g_mean=0.00000005
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.001576 g_max=0.000047 g_mean=0.00000001
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.003963 g_max=0.003963 g_mean=-0.00396347
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.001185 g_max=0.000026 g_mean=0.00000001
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.002506 g_max=0.002506 g_mean=-0.00250558
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.001295 g_max=0.000033 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.000922 g_max=0.000922 g_mean=-0.00092200
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000613 g_max=0.000014 g_mean=0.00000001
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.000583 g_max=0.000583 g_mean=-0.00058288
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000134 g_max=0.000004 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.000203 g_max=0.000203 g_mean=-0.00020292
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000141 g_max=0.000004 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000059 g_max=0.000059 g_mean=-0.00005859
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000107 g_max=0.000003 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000006 g_max=0.000006 g_mean=0.00000565
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000279 g_max=0.000008 g_mean=0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000144 g_max=0.000144 g_mean=0.00014412
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.103064 g_max=0.035645 g_mean=-0.00000016
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.001163 g_max=0.000026 g_mean=-0.00000001
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.001514 g_max=0.000074 g_mean=0.00000003
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.000806 g_max=0.000053 g_mean=-0.00000003
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000912 g_max=0.000031 g_mean=0.00000003
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:1000/25000 train_loss:2.4524 grad_norm:0.1552 lr_scale:0.9969 muon_mom:0.9480 train_time:212067ms step_avg:212.07ms
+  [TRAIN] step:1000 loss:2.4524 lr_scale:0.9969 grad_norm:0.1552 muon_mom:0.9480 time:212067ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:1000/25000 val_loss:2.4887 val_bpb:1.4740 train_time:214647ms step_avg:214.65ms
+step:1100/25000 train_loss:2.3951 grad_norm:0.1635 lr_scale:0.9962 muon_mom:0.9508 train_time:234600ms step_avg:213.27ms
+  [TRAIN] step:1100 loss:2.3951 lr_scale:0.9962 grad_norm:0.1635 muon_mom:0.9508 time:234600ms
+step:1200/25000 train_loss:2.5539 grad_norm:0.2203 lr_scale:0.9954 muon_mom:0.9536 train_time:254591ms step_avg:212.16ms
+  [TRAIN] step:1200 loss:2.5539 lr_scale:0.9954 grad_norm:0.2203 muon_mom:0.9536 time:254591ms
+step:1250/25000 val_loss:2.4632 val_bpb:1.4589 train_time:264563ms step_avg:211.65ms
+step:1300/25000 train_loss:2.3330 grad_norm:0.1861 lr_scale:0.9946 muon_mom:0.9564 train_time:274532ms step_avg:211.18ms
+  [TRAIN] step:1300 loss:2.3330 lr_scale:0.9946 grad_norm:0.1861 muon_mom:0.9564 time:274532ms
+step:1400/25000 train_loss:2.5110 grad_norm:0.1899 lr_scale:0.9936 muon_mom:0.9592 train_time:294518ms step_avg:210.37ms
+  [TRAIN] step:1400 loss:2.5110 lr_scale:0.9936 grad_norm:0.1899 muon_mom:0.9592 time:294518ms
+step:1500/25000 train_loss:2.4499 grad_norm:0.1943 lr_scale:0.9926 muon_mom:0.9620 train_time:314481ms step_avg:209.65ms
+  [TRAIN] step:1500 loss:2.4499 lr_scale:0.9926 grad_norm:0.1943 muon_mom:0.9620 time:314481ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:1500/25000 val_loss:2.4468 val_bpb:1.4492 train_time:316603ms step_avg:211.07ms
+step:1600/25000 train_loss:2.4076 grad_norm:0.1692 lr_scale:0.9915 muon_mom:0.9648 train_time:336597ms step_avg:210.37ms
+  [TRAIN] step:1600 loss:2.4076 lr_scale:0.9915 grad_norm:0.1692 muon_mom:0.9648 time:336597ms
+step:1700/25000 train_loss:2.5038 grad_norm:0.1654 lr_scale:0.9904 muon_mom:0.9676 train_time:356560ms step_avg:209.74ms
+  [TRAIN] step:1700 loss:2.5038 lr_scale:0.9904 grad_norm:0.1654 muon_mom:0.9676 time:356560ms
+step:1750/25000 val_loss:2.4260 val_bpb:1.4368 train_time:366544ms step_avg:209.45ms
+step:1800/25000 train_loss:2.4528 grad_norm:0.1407 lr_scale:0.9891 muon_mom:0.9704 train_time:376523ms step_avg:209.18ms
+  [TRAIN] step:1800 loss:2.4528 lr_scale:0.9891 grad_norm:0.1407 muon_mom:0.9704 time:376523ms
+step:1900/25000 train_loss:2.4455 grad_norm:0.2304 lr_scale:0.9878 muon_mom:0.9732 train_time:396487ms step_avg:208.68ms
+  [TRAIN] step:1900 loss:2.4455 lr_scale:0.9878 grad_norm:0.2304 muon_mom:0.9732 time:396487ms
+  [T4] block[0] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.278914
+  [T4] block[1] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.182968
+  [T4] block[2] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.234291
+  [T4] block[3] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.228561
+  [T4] block[4] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.154090
+  [T4] block[5] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.085616
+  [T4] block[6] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.012248
+  [T4] block[7] momentum UPDATE: buf_norm=2.504399 buf_mean_abs=0.08860359 gate=0.009838
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 2000
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=338.502930 min=-2.125000 max=2.375000 mean=-0.002366 tokens_range=[1,1018]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=136.686035 min=-1.242188 max=1.234375 mean=-0.000267 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=78.938774 min=-1.242188 max=1.023438 mean=-0.000436 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.075012 min=-4.593750 max=4.343750 mean=-0.006236 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=631.252014 min=-4.343750 max=4.218750 mean=-0.006239 
+  [T4] block[0] momentum: buf_norm=2.504399, gate=0.2789, proj_norm=176.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=863.452942 min=-6.312500 max=5.687500 mean=0.008450 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3303.302490 min=1792.000000 max=2112.000000 mean=1901.333374 
+  [T3] block[0] spatial_bias: gate_mean=0.4453, gate_std=0.0840, gate_range=[0.0175,0.6406]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=863.452942 min=-6.312500 max=5.687500 mean=0.008450 
+  [T4] block[1] momentum: buf_norm=2.504399, gate=0.1830, proj_norm=137.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=986.005127 min=-6.375000 max=7.375000 mean=0.014834 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2828.113037 min=1012.000000 max=1976.000000 mean=1580.000000 
+  [T3] block[1] spatial_bias: gate_mean=0.4727, gate_std=0.0869, gate_range=[0.0188,0.6914]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=986.005127 min=-6.375000 max=7.375000 mean=0.014834 
+  [T4] block[2] momentum: buf_norm=2.504399, gate=0.2343, proj_norm=135.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1163.299561 min=-6.687500 max=9.625000 mean=0.032287 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2468.920410 min=812.000000 max=1768.000000 mean=1366.666748 
+  [T3] block[2] spatial_bias: gate_mean=0.4863, gate_std=0.0874, gate_range=[0.0175,0.6836]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1163.299561 min=-6.687500 max=9.625000 mean=0.032287 
+  [T4] block[3] momentum: buf_norm=2.504399, gate=0.2286, proj_norm=138.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1353.708862 min=-8.500000 max=11.125000 mean=0.031623 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2337.164062 min=696.000000 max=1648.000000 mean=1282.666748 
+  [T3] block[3] spatial_bias: gate_mean=0.4805, gate_std=0.0879, gate_range=[0.0206,0.6602]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1353.708862 min=-8.500000 max=11.125000 mean=0.031623 
+  [T4] block[4] momentum: buf_norm=2.504399, gate=0.1541, proj_norm=145.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1510.036377 min=-10.000000 max=12.312500 mean=0.024296 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2464.081055 min=604.000000 max=1752.000000 mean=1326.666748 
+  [T3] block[4] spatial_bias: gate_mean=0.4316, gate_std=0.1128, gate_range=[0.1177,0.9141]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1510.036377 min=-10.000000 max=12.312500 mean=0.024296 
+  [T4] block[5] momentum: buf_norm=2.504399, gate=0.0856, proj_norm=127.000000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1583.380249 min=-10.750000 max=12.687500 mean=0.016065 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2439.186768 min=552.000000 max=1688.000000 mean=1304.000000 
+  [T3] block[5] spatial_bias: gate_mean=0.5117, gate_std=0.0913, gate_range=[0.0708,0.7305]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1583.380249 min=-10.750000 max=12.687500 mean=0.016065 
+  [T4] block[6] momentum: buf_norm=2.504399, gate=0.0122, proj_norm=93.000000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1588.961304 min=-10.812500 max=12.750000 mean=0.015508 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2425.320557 min=446.000000 max=1760.000000 mean=1271.333374 
+  [T3] block[6] spatial_bias: gate_mean=0.4922, gate_std=0.0786, gate_range=[0.0320,0.7344]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1588.961304 min=-10.812500 max=12.750000 mean=0.015508 
+  [T4] block[7] momentum: buf_norm=2.504399, gate=0.0098, proj_norm=84.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1587.059814 min=-10.812500 max=12.812500 mean=0.016188 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=2011.646118 min=464.000000 max=1400.000000 mean=1077.333374 
+  [T3] block[7] spatial_bias: gate_mean=0.4512, gate_std=0.0815, gate_range=[0.0496,0.6992]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1587.059814 min=-10.812500 max=12.812500 mean=0.016188 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1587.059814 min=-10.812500 max=12.812500 mean=0.016188 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 2000
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000363 g_max=0.000014 g_mean=0.00000006
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.000461 g_max=0.000038 g_mean=0.00000006
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.000885 g_max=0.000048 g_mean=0.00000001
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.006253 g_max=0.006253 g_mean=-0.00625331
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000549 g_max=0.000117 g_mean=0.00000001
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000412 g_max=0.000030 g_mean=0.00000015
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000364 g_max=0.000020 g_mean=0.00000006
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000323 g_max=0.000026 g_mean=0.00000008
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000132 g_max=0.000012 g_mean=0.00000001
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000179 g_max=0.000009 g_mean=-0.00000008
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000304 g_max=0.000020 g_mean=0.00000004
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000414 g_max=0.000029 g_mean=0.00000011
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.001134 g_max=0.000030 g_mean=0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.004945 g_max=0.004945 g_mean=-0.00494458
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.000943 g_max=0.000023 g_mean=0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.002206 g_max=0.002206 g_mean=-0.00220643
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.001136 g_max=0.000030 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.005096 g_max=0.005096 g_mean=-0.00509551
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000715 g_max=0.000023 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.003264 g_max=0.003264 g_mean=-0.00326416
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000193 g_max=0.000005 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.001112 g_max=0.001112 g_mean=-0.00111223
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000207 g_max=0.000006 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000738 g_max=0.000738 g_mean=-0.00073843
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000061 g_max=0.000002 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000130 g_max=0.000130 g_mean=-0.00013005
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000141 g_max=0.000003 g_mean=0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000559 g_max=0.000559 g_mean=-0.00055917
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.104791 g_max=0.026855 g_mean=-0.00000012
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.001005 g_max=0.000038 g_mean=0.00000002
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.001252 g_max=0.000055 g_mean=-0.00000003
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.001057 g_max=0.000158 g_mean=0.00000006
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000882 g_max=0.000034 g_mean=-0.00000001
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:2000/25000 train_loss:2.4695 grad_norm:0.1532 lr_scale:0.9864 muon_mom:0.9760 train_time:416535ms step_avg:208.27ms
+  [TRAIN] step:2000 loss:2.4695 lr_scale:0.9864 grad_norm:0.1532 muon_mom:0.9760 time:416535ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+checkpoint:saved step:2000 path:checkpoints/ckpt_step02000.pt size:146.8MB
+step:2000/25000 val_loss:2.4201 val_bpb:1.4333 train_time:418813ms step_avg:209.41ms
+step:2100/25000 train_loss:2.4457 grad_norm:0.1762 lr_scale:0.9850 muon_mom:0.9788 train_time:438781ms step_avg:208.94ms
+  [TRAIN] step:2100 loss:2.4457 lr_scale:0.9850 grad_norm:0.1762 muon_mom:0.9788 time:438781ms
+step:2200/25000 train_loss:2.3810 grad_norm:0.1604 lr_scale:0.9834 muon_mom:0.9816 train_time:458752ms step_avg:208.52ms
+  [TRAIN] step:2200 loss:2.3810 lr_scale:0.9834 grad_norm:0.1604 muon_mom:0.9816 time:458752ms
+step:2250/25000 val_loss:2.4111 val_bpb:1.4280 train_time:468731ms step_avg:208.33ms
+step:2300/25000 train_loss:2.4061 grad_norm:0.1589 lr_scale:0.9818 muon_mom:0.9844 train_time:478769ms step_avg:208.16ms
+  [TRAIN] step:2300 loss:2.4061 lr_scale:0.9818 grad_norm:0.1589 muon_mom:0.9844 time:478769ms
+step:2400/25000 train_loss:2.3794 grad_norm:0.1681 lr_scale:0.9802 muon_mom:0.9872 train_time:498739ms step_avg:207.81ms
+  [TRAIN] step:2400 loss:2.3794 lr_scale:0.9802 grad_norm:0.1681 muon_mom:0.9872 time:498739ms
+step:2500/25000 train_loss:2.3789 grad_norm:0.1361 lr_scale:0.9784 muon_mom:0.9900 train_time:518702ms step_avg:207.48ms
+  [TRAIN] step:2500 loss:2.3789 lr_scale:0.9784 grad_norm:0.1361 muon_mom:0.9900 time:518702ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:2500/25000 val_loss:2.3997 val_bpb:1.4212 train_time:521280ms step_avg:208.51ms
+step:2600/25000 train_loss:2.4026 grad_norm:0.1438 lr_scale:0.9766 muon_mom:0.9900 train_time:541235ms step_avg:208.17ms
+  [TRAIN] step:2600 loss:2.4026 lr_scale:0.9766 grad_norm:0.1438 muon_mom:0.9900 time:541235ms
+step:2700/25000 train_loss:2.3283 grad_norm:0.1324 lr_scale:0.9747 muon_mom:0.9900 train_time:561245ms step_avg:207.87ms
+  [TRAIN] step:2700 loss:2.3283 lr_scale:0.9747 grad_norm:0.1324 muon_mom:0.9900 time:561245ms
+step:2750/25000 val_loss:2.3825 val_bpb:1.4111 train_time:571246ms step_avg:207.73ms
+step:2800/25000 train_loss:2.3936 grad_norm:0.1518 lr_scale:0.9727 muon_mom:0.9900 train_time:581233ms step_avg:207.58ms
+  [TRAIN] step:2800 loss:2.3936 lr_scale:0.9727 grad_norm:0.1518 muon_mom:0.9900 time:581233ms
+step:2900/25000 train_loss:2.3910 grad_norm:0.1606 lr_scale:0.9707 muon_mom:0.9900 train_time:601201ms step_avg:207.31ms
+  [TRAIN] step:2900 loss:2.3910 lr_scale:0.9707 grad_norm:0.1606 muon_mom:0.9900 time:601201ms
+step:3000/25000 train_loss:2.3832 grad_norm:0.1886 lr_scale:0.9686 muon_mom:0.9900 train_time:621172ms step_avg:207.06ms
+  [TRAIN] step:3000 loss:2.3832 lr_scale:0.9686 grad_norm:0.1886 muon_mom:0.9900 time:621172ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:3000/25000 val_loss:2.3656 val_bpb:1.4010 train_time:623228ms step_avg:207.74ms
+step:3100/25000 train_loss:2.9655 grad_norm:0.2046 lr_scale:0.9664 muon_mom:0.9900 train_time:643224ms step_avg:207.49ms
+  [TRAIN] step:3100 loss:2.9655 lr_scale:0.9664 grad_norm:0.2046 muon_mom:0.9900 time:643224ms
+step:3200/25000 train_loss:2.3196 grad_norm:0.1291 lr_scale:0.9642 muon_mom:0.9900 train_time:663211ms step_avg:207.25ms
+  [TRAIN] step:3200 loss:2.3196 lr_scale:0.9642 grad_norm:0.1291 muon_mom:0.9900 time:663211ms
+step:3250/25000 val_loss:2.3555 val_bpb:1.3951 train_time:673202ms step_avg:207.14ms
+step:3300/25000 train_loss:2.3542 grad_norm:0.1644 lr_scale:0.9618 muon_mom:0.9900 train_time:683189ms step_avg:207.03ms
+  [TRAIN] step:3300 loss:2.3542 lr_scale:0.9618 grad_norm:0.1644 muon_mom:0.9900 time:683189ms
+step:3400/25000 train_loss:2.3538 grad_norm:0.1755 lr_scale:0.9594 muon_mom:0.9900 train_time:703161ms step_avg:206.81ms
+  [TRAIN] step:3400 loss:2.3538 lr_scale:0.9594 grad_norm:0.1755 muon_mom:0.9900 time:703161ms
+step:3500/25000 train_loss:2.3589 grad_norm:0.1243 lr_scale:0.9570 muon_mom:0.9900 train_time:723270ms step_avg:206.65ms
+  [TRAIN] step:3500 loss:2.3589 lr_scale:0.9570 grad_norm:0.1243 muon_mom:0.9900 time:723270ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:3500/25000 val_loss:2.3434 val_bpb:1.3879 train_time:725253ms step_avg:207.22ms
+step:3600/25000 train_loss:2.3839 grad_norm:0.1292 lr_scale:0.9545 muon_mom:0.9900 train_time:745208ms step_avg:207.00ms
+  [TRAIN] step:3600 loss:2.3839 lr_scale:0.9545 grad_norm:0.1292 muon_mom:0.9900 time:745208ms
+step:3700/25000 train_loss:2.3178 grad_norm:0.1058 lr_scale:0.9519 muon_mom:0.9900 train_time:765174ms step_avg:206.80ms
+  [TRAIN] step:3700 loss:2.3178 lr_scale:0.9519 grad_norm:0.1058 muon_mom:0.9900 time:765174ms
+step:3750/25000 val_loss:2.3305 val_bpb:1.3803 train_time:775166ms step_avg:206.71ms
+step:3800/25000 train_loss:2.2952 grad_norm:0.1091 lr_scale:0.9492 muon_mom:0.9900 train_time:785156ms step_avg:206.62ms
+  [TRAIN] step:3800 loss:2.2952 lr_scale:0.9492 grad_norm:0.1091 muon_mom:0.9900 time:785156ms
+step:3900/25000 train_loss:2.3625 grad_norm:0.1635 lr_scale:0.9465 muon_mom:0.9900 train_time:805227ms step_avg:206.47ms
+  [TRAIN] step:3900 loss:2.3625 lr_scale:0.9465 grad_norm:0.1635 muon_mom:0.9900 time:805227ms
+step:4000/25000 train_loss:2.3211 grad_norm:0.1112 lr_scale:0.9437 muon_mom:0.9900 train_time:825177ms step_avg:206.29ms
+  [TRAIN] step:4000 loss:2.3211 lr_scale:0.9437 grad_norm:0.1112 muon_mom:0.9900 time:825177ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+checkpoint:saved step:4000 path:checkpoints/ckpt_step04000.pt size:146.8MB
+step:4000/25000 val_loss:2.3267 val_bpb:1.3780 train_time:827388ms step_avg:206.85ms
+step:4100/25000 train_loss:2.3681 grad_norm:0.1416 lr_scale:0.9408 muon_mom:0.9900 train_time:847350ms step_avg:206.67ms
+  [TRAIN] step:4100 loss:2.3681 lr_scale:0.9408 grad_norm:0.1416 muon_mom:0.9900 time:847350ms
+step:4200/25000 train_loss:2.4987 grad_norm:0.1856 lr_scale:0.9379 muon_mom:0.9900 train_time:867450ms step_avg:206.54ms
+  [TRAIN] step:4200 loss:2.4987 lr_scale:0.9379 grad_norm:0.1856 muon_mom:0.9900 time:867450ms
+step:4250/25000 val_loss:2.3256 val_bpb:1.3774 train_time:877436ms step_avg:206.46ms
+step:4300/25000 train_loss:2.2623 grad_norm:0.1458 lr_scale:0.9349 muon_mom:0.9900 train_time:887406ms step_avg:206.37ms
+  [TRAIN] step:4300 loss:2.2623 lr_scale:0.9349 grad_norm:0.1458 muon_mom:0.9900 time:887406ms
+step:4400/25000 train_loss:2.2410 grad_norm:0.1192 lr_scale:0.9318 muon_mom:0.9900 train_time:907382ms step_avg:206.22ms
+  [TRAIN] step:4400 loss:2.2410 lr_scale:0.9318 grad_norm:0.1192 muon_mom:0.9900 time:907382ms
+step:4500/25000 train_loss:2.2704 grad_norm:0.1280 lr_scale:0.9287 muon_mom:0.9900 train_time:927334ms step_avg:206.07ms
+  [TRAIN] step:4500 loss:2.2704 lr_scale:0.9287 grad_norm:0.1280 muon_mom:0.9900 time:927334ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:4500/25000 val_loss:2.3233 val_bpb:1.3760 train_time:930005ms step_avg:206.67ms
+step:4600/25000 train_loss:2.4307 grad_norm:0.1359 lr_scale:0.9255 muon_mom:0.9900 train_time:950080ms step_avg:206.54ms
+  [TRAIN] step:4600 loss:2.4307 lr_scale:0.9255 grad_norm:0.1359 muon_mom:0.9900 time:950080ms
+step:4700/25000 train_loss:2.2232 grad_norm:0.1224 lr_scale:0.9223 muon_mom:0.9900 train_time:970058ms step_avg:206.40ms
+  [TRAIN] step:4700 loss:2.2232 lr_scale:0.9223 grad_norm:0.1224 muon_mom:0.9900 time:970058ms
+step:4750/25000 val_loss:2.3176 val_bpb:1.3726 train_time:980057ms step_avg:206.33ms
+step:4800/25000 train_loss:2.3120 grad_norm:0.1503 lr_scale:0.9189 muon_mom:0.9900 train_time:990048ms step_avg:206.26ms
+  [TRAIN] step:4800 loss:2.3120 lr_scale:0.9189 grad_norm:0.1503 muon_mom:0.9900 time:990048ms
+step:4900/25000 train_loss:2.3373 grad_norm:0.1205 lr_scale:0.9156 muon_mom:0.9900 train_time:1010003ms step_avg:206.12ms
+  [TRAIN] step:4900 loss:2.3373 lr_scale:0.9156 grad_norm:0.1205 muon_mom:0.9900 time:1010003ms
+  [T4] block[0] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.406514
+  [T4] block[1] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.268148
+  [T4] block[2] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.336494
+  [T4] block[3] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.373599
+  [T4] block[4] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.286222
+  [T4] block[5] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.124291
+  [T4] block[6] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.058300
+  [T4] block[7] momentum UPDATE: buf_norm=2.428372 buf_mean_abs=0.08564182 gate=0.012769
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 5000
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=369.244659 min=-2.406250 max=2.359375 mean=-0.003283 tokens_range=[1,1008]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=130.414612 min=-1.140625 max=1.171875 mean=0.000441 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=40.517780 min=-0.482422 max=0.480469 mean=-0.000177 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.065247 min=-4.437500 max=4.406250 mean=-0.005932 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=640.292664 min=-4.156250 max=4.093750 mean=-0.005936 
+  [T4] block[0] momentum: buf_norm=2.428372, gate=0.4065, proj_norm=229.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1257.499268 min=-7.125000 max=8.062500 mean=0.022287 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=6035.584961 min=3120.000000 max=3952.000000 mean=3466.666748 
+  [T3] block[0] spatial_bias: gate_mean=0.4551, gate_std=0.0684, gate_range=[0.0496,0.6836]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1257.499268 min=-7.125000 max=8.062500 mean=0.022287 
+  [T4] block[1] momentum: buf_norm=2.428372, gate=0.2681, proj_norm=178.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1615.126953 min=-9.500000 max=10.000000 mean=0.051600 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=6130.740723 min=1800.000000 max=4160.000000 mean=3362.666748 
+  [T3] block[1] spatial_bias: gate_mean=0.4902, gate_std=0.0918, gate_range=[0.0332,0.7500]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1615.126953 min=-9.500000 max=10.000000 mean=0.051600 
+  [T4] block[2] momentum: buf_norm=2.428372, gate=0.3365, proj_norm=182.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2079.941650 min=-13.875000 max=11.375000 mean=0.070530 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=5756.087402 min=1408.000000 max=4224.000000 mean=3093.333496 
+  [T3] block[2] spatial_bias: gate_mean=0.5352, gate_std=0.0801, gate_range=[0.0737,0.8086]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2079.941650 min=-13.875000 max=11.375000 mean=0.070530 
+  [T4] block[3] momentum: buf_norm=2.428372, gate=0.3736, proj_norm=185.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2649.182373 min=-18.500000 max=14.812500 mean=0.091221 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4800.566406 min=1080.000000 max=3456.000000 mean=2562.666748 
+  [T3] block[3] spatial_bias: gate_mean=0.5273, gate_std=0.0791, gate_range=[0.0645,0.8164]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2649.182373 min=-18.500000 max=14.812500 mean=0.091221 
+  [T4] block[4] momentum: buf_norm=2.428372, gate=0.2862, proj_norm=160.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3056.262695 min=-23.125000 max=18.125000 mean=0.067204 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4262.348633 min=1128.000000 max=3024.000000 mean=2312.000000 
+  [T3] block[4] spatial_bias: gate_mean=0.5273, gate_std=0.1021, gate_range=[0.0447,0.8594]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3056.262695 min=-23.125000 max=18.125000 mean=0.067204 
+  [T4] block[5] momentum: buf_norm=2.428372, gate=0.1243, proj_norm=127.000000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3165.568115 min=-23.750000 max=18.250000 mean=0.054190 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4295.672363 min=1080.000000 max=3088.000000 mean=2317.333496 
+  [T3] block[5] spatial_bias: gate_mean=0.5547, gate_std=0.0757, gate_range=[0.1143,0.7773]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3165.568115 min=-23.750000 max=18.250000 mean=0.054190 
+  [T4] block[6] momentum: buf_norm=2.428372, gate=0.0583, proj_norm=151.000000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3225.868896 min=-24.375000 max=18.750000 mean=0.049107 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4708.732422 min=880.000000 max=3568.000000 mean=2464.000000 
+  [T3] block[6] spatial_bias: gate_mean=0.5469, gate_std=0.0542, gate_range=[0.0967,0.7148]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3225.868896 min=-24.375000 max=18.750000 mean=0.049107 
+  [T4] block[7] momentum: buf_norm=2.428372, gate=0.0128, proj_norm=113.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3229.234375 min=-24.375000 max=18.875000 mean=0.049877 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3826.963379 min=724.000000 max=2736.000000 mean=2012.000000 
+  [T3] block[7] spatial_bias: gate_mean=0.4961, gate_std=0.0679, gate_range=[0.0454,0.6602]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3229.234375 min=-24.375000 max=18.875000 mean=0.049877 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=3229.234375 min=-24.375000 max=18.875000 mean=0.049877 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 5000
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000177 g_max=0.000008 g_mean=-0.00000000
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.000201 g_max=0.000012 g_mean=-0.00000000
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.000343 g_max=0.000036 g_mean=-0.00000002
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.008172 g_max=0.008172 g_mean=0.00817157
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000525 g_max=0.000052 g_mean=-0.00000004
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000324 g_max=0.000021 g_mean=-0.00000001
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000291 g_max=0.000017 g_mean=0.00000004
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000243 g_max=0.000021 g_mean=-0.00000004
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000251 g_max=0.000021 g_mean=-0.00000003
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000318 g_max=0.000019 g_mean=-0.00000002
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000352 g_max=0.000019 g_mean=0.00000003
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000444 g_max=0.000027 g_mean=-0.00000010
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.000493 g_max=0.000014 g_mean=0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.006769 g_max=0.006769 g_mean=-0.00676870
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.000340 g_max=0.000012 g_mean=0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.001899 g_max=0.001899 g_mean=-0.00189919
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.000350 g_max=0.000013 g_mean=0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.000846 g_max=0.000846 g_mean=-0.00084624
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000209 g_max=0.000008 g_mean=0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.000241 g_max=0.000241 g_mean=0.00024066
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000129 g_max=0.000004 g_mean=0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.000363 g_max=0.000363 g_mean=0.00036339
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000110 g_max=0.000004 g_mean=0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.000058 g_max=0.000058 g_mean=-0.00005786
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000082 g_max=0.000003 g_mean=0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000203 g_max=0.000203 g_mean=-0.00020258
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000033 g_max=0.000001 g_mean=-0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000018 g_max=0.000018 g_mean=0.00001840
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.087100 g_max=0.033691 g_mean=-0.00000004
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.000724 g_max=0.000021 g_mean=-0.00000001
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.000927 g_max=0.000060 g_mean=-0.00000000
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.001167 g_max=0.000317 g_mean=-0.00000003
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000649 g_max=0.000025 g_mean=-0.00000001
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:5000/25000 train_loss:2.3177 grad_norm:0.1036 lr_scale:0.9121 muon_mom:0.9900 train_time:1030103ms step_avg:206.02ms
+  [TRAIN] step:5000 loss:2.3177 lr_scale:0.9121 grad_norm:0.1036 muon_mom:0.9900 time:1030103ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:5000/25000 val_loss:2.3061 val_bpb:1.3658 train_time:1032104ms step_avg:206.42ms
+step:5100/25000 train_loss:2.2194 grad_norm:0.1482 lr_scale:0.9086 muon_mom:0.9900 train_time:1052091ms step_avg:206.29ms
+  [TRAIN] step:5100 loss:2.2194 lr_scale:0.9086 grad_norm:0.1482 muon_mom:0.9900 time:1052091ms
+step:5200/25000 train_loss:2.3230 grad_norm:0.1259 lr_scale:0.9050 muon_mom:0.9900 train_time:1072076ms step_avg:206.17ms
+  [TRAIN] step:5200 loss:2.3230 lr_scale:0.9050 grad_norm:0.1259 muon_mom:0.9900 time:1072076ms
+step:5250/25000 val_loss:2.3101 val_bpb:1.3681 train_time:1082072ms step_avg:206.11ms
+step:5300/25000 train_loss:2.3318 grad_norm:0.1507 lr_scale:0.9014 muon_mom:0.9900 train_time:1092055ms step_avg:206.05ms
+  [TRAIN] step:5300 loss:2.3318 lr_scale:0.9014 grad_norm:0.1507 muon_mom:0.9900 time:1092055ms
+step:5400/25000 train_loss:2.3184 grad_norm:0.1233 lr_scale:0.8977 muon_mom:0.9900 train_time:1112162ms step_avg:205.96ms
+  [TRAIN] step:5400 loss:2.3184 lr_scale:0.8977 grad_norm:0.1233 muon_mom:0.9900 time:1112162ms
+step:5500/25000 train_loss:2.4698 grad_norm:0.1677 lr_scale:0.8940 muon_mom:0.9900 train_time:1132146ms step_avg:205.84ms
+  [TRAIN] step:5500 loss:2.4698 lr_scale:0.8940 grad_norm:0.1677 muon_mom:0.9900 time:1132146ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:5500/25000 val_loss:2.3100 val_bpb:1.3681 train_time:1134192ms step_avg:206.22ms
+step:5600/25000 train_loss:2.3228 grad_norm:0.1101 lr_scale:0.8902 muon_mom:0.9900 train_time:1154150ms step_avg:206.10ms
+  [TRAIN] step:5600 loss:2.3228 lr_scale:0.8902 grad_norm:0.1101 muon_mom:0.9900 time:1154150ms
+step:5700/25000 train_loss:2.3062 grad_norm:0.1350 lr_scale:0.8863 muon_mom:0.9900 train_time:1174107ms step_avg:205.98ms
+  [TRAIN] step:5700 loss:2.3062 lr_scale:0.8863 grad_norm:0.1350 muon_mom:0.9900 time:1174107ms
+step:5750/25000 val_loss:2.3026 val_bpb:1.3637 train_time:1184203ms step_avg:205.95ms
+step:5800/25000 train_loss:2.3231 grad_norm:0.1028 lr_scale:0.8824 muon_mom:0.9900 train_time:1194201ms step_avg:205.90ms
+  [TRAIN] step:5800 loss:2.3231 lr_scale:0.8824 grad_norm:0.1028 muon_mom:0.9900 time:1194201ms
+step:5900/25000 train_loss:2.3223 grad_norm:0.1174 lr_scale:0.8784 muon_mom:0.9900 train_time:1214167ms step_avg:205.79ms
+  [TRAIN] step:5900 loss:2.3223 lr_scale:0.8784 grad_norm:0.1174 muon_mom:0.9900 time:1214167ms
+step:6000/25000 train_loss:2.2543 grad_norm:0.1024 lr_scale:0.8744 muon_mom:0.9900 train_time:1234118ms step_avg:205.69ms
+  [TRAIN] step:6000 loss:2.2543 lr_scale:0.8744 grad_norm:0.1024 muon_mom:0.9900 time:1234118ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+checkpoint:saved step:6000 path:checkpoints/ckpt_step06000.pt size:146.8MB
+step:6000/25000 val_loss:2.2920 val_bpb:1.3574 train_time:1236289ms step_avg:206.05ms
+step:6100/25000 train_loss:2.3913 grad_norm:0.1716 lr_scale:0.8703 muon_mom:0.9900 train_time:1256255ms step_avg:205.94ms
+  [TRAIN] step:6100 loss:2.3913 lr_scale:0.8703 grad_norm:0.1716 muon_mom:0.9900 time:1256255ms
+step:6200/25000 train_loss:2.2837 grad_norm:0.1189 lr_scale:0.8662 muon_mom:0.9900 train_time:1276347ms step_avg:205.86ms
+  [TRAIN] step:6200 loss:2.2837 lr_scale:0.8662 grad_norm:0.1189 muon_mom:0.9900 time:1276347ms
+step:6250/25000 val_loss:2.2945 val_bpb:1.3590 train_time:1286330ms step_avg:205.81ms
+step:6300/25000 train_loss:2.1768 grad_norm:0.1100 lr_scale:0.8620 muon_mom:0.9900 train_time:1296323ms step_avg:205.77ms
+  [TRAIN] step:6300 loss:2.1768 lr_scale:0.8620 grad_norm:0.1100 muon_mom:0.9900 time:1296323ms
+step:6400/25000 train_loss:2.2887 grad_norm:0.1402 lr_scale:0.8577 muon_mom:0.9900 train_time:1316290ms step_avg:205.67ms
+  [TRAIN] step:6400 loss:2.2887 lr_scale:0.8577 grad_norm:0.1402 muon_mom:0.9900 time:1316290ms
+step:6500/25000 train_loss:2.1944 grad_norm:0.1174 lr_scale:0.8534 muon_mom:0.9900 train_time:1336375ms step_avg:205.60ms
+  [TRAIN] step:6500 loss:2.1944 lr_scale:0.8534 grad_norm:0.1174 muon_mom:0.9900 time:1336375ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:6500/25000 val_loss:2.2903 val_bpb:1.3564 train_time:1339250ms step_avg:206.04ms
+step:6600/25000 train_loss:2.2515 grad_norm:0.1109 lr_scale:0.8491 muon_mom:0.9900 train_time:1359233ms step_avg:205.94ms
+  [TRAIN] step:6600 loss:2.2515 lr_scale:0.8491 grad_norm:0.1109 muon_mom:0.9900 time:1359233ms
+step:6700/25000 train_loss:2.3135 grad_norm:0.1567 lr_scale:0.8447 muon_mom:0.9900 train_time:1379211ms step_avg:205.85ms
+  [TRAIN] step:6700 loss:2.3135 lr_scale:0.8447 grad_norm:0.1567 muon_mom:0.9900 time:1379211ms
+step:6750/25000 val_loss:2.2894 val_bpb:1.3559 train_time:1389204ms step_avg:205.81ms
+step:6800/25000 train_loss:2.3391 grad_norm:0.1531 lr_scale:0.8402 muon_mom:0.9900 train_time:1399182ms step_avg:205.76ms
+  [TRAIN] step:6800 loss:2.3391 lr_scale:0.8402 grad_norm:0.1531 muon_mom:0.9900 time:1399182ms
+step:6900/25000 train_loss:2.2018 grad_norm:0.1142 lr_scale:0.8357 muon_mom:0.9900 train_time:1419293ms step_avg:205.69ms
+  [TRAIN] step:6900 loss:2.2018 lr_scale:0.8357 grad_norm:0.1142 muon_mom:0.9900 time:1419293ms
+step:7000/25000 train_loss:2.3421 grad_norm:0.1024 lr_scale:0.8311 muon_mom:0.9900 train_time:1439257ms step_avg:205.61ms
+  [TRAIN] step:7000 loss:2.3421 lr_scale:0.8311 grad_norm:0.1024 muon_mom:0.9900 time:1439257ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:7000/25000 val_loss:2.2829 val_bpb:1.3521 train_time:1441385ms step_avg:205.91ms
+step:7100/25000 train_loss:2.2434 grad_norm:0.1161 lr_scale:0.8265 muon_mom:0.9900 train_time:1461366ms step_avg:205.83ms
+  [TRAIN] step:7100 loss:2.2434 lr_scale:0.8265 grad_norm:0.1161 muon_mom:0.9900 time:1461366ms
+step:7200/25000 train_loss:2.2543 grad_norm:0.1240 lr_scale:0.8219 muon_mom:0.9900 train_time:1481359ms step_avg:205.74ms
+  [TRAIN] step:7200 loss:2.2543 lr_scale:0.8219 grad_norm:0.1240 muon_mom:0.9900 time:1481359ms
+step:7250/25000 val_loss:2.2779 val_bpb:1.3491 train_time:1491462ms step_avg:205.72ms
+step:7300/25000 train_loss:2.2603 grad_norm:0.1261 lr_scale:0.8172 muon_mom:0.9900 train_time:1501443ms step_avg:205.68ms
+  [TRAIN] step:7300 loss:2.2603 lr_scale:0.8172 grad_norm:0.1261 muon_mom:0.9900 time:1501443ms
+step:7400/25000 train_loss:2.2780 grad_norm:0.1491 lr_scale:0.8124 muon_mom:0.9900 train_time:1521402ms step_avg:205.59ms
+  [TRAIN] step:7400 loss:2.2780 lr_scale:0.8124 grad_norm:0.1491 muon_mom:0.9900 time:1521402ms
+step:7500/25000 train_loss:2.2877 grad_norm:0.1141 lr_scale:0.8076 muon_mom:0.9900 train_time:1541370ms step_avg:205.52ms
+  [TRAIN] step:7500 loss:2.2877 lr_scale:0.8076 grad_norm:0.1141 muon_mom:0.9900 time:1541370ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:7500/25000 val_loss:2.2799 val_bpb:1.3503 train_time:1543466ms step_avg:205.80ms
+step:7600/25000 train_loss:2.3630 grad_norm:0.1056 lr_scale:0.8028 muon_mom:0.9900 train_time:1563422ms step_avg:205.71ms
+  [TRAIN] step:7600 loss:2.3630 lr_scale:0.8028 grad_norm:0.1056 muon_mom:0.9900 time:1563422ms
+step:7700/25000 train_loss:2.2732 grad_norm:0.1030 lr_scale:0.7979 muon_mom:0.9900 train_time:1583488ms step_avg:205.65ms
+  [TRAIN] step:7700 loss:2.2732 lr_scale:0.7979 grad_norm:0.1030 muon_mom:0.9900 time:1583488ms
+step:7750/25000 val_loss:2.2731 val_bpb:1.3463 train_time:1593474ms step_avg:205.61ms
+step:7800/25000 train_loss:2.3267 grad_norm:0.1113 lr_scale:0.7930 muon_mom:0.9900 train_time:1603462ms step_avg:205.57ms
+  [TRAIN] step:7800 loss:2.3267 lr_scale:0.7930 grad_norm:0.1113 muon_mom:0.9900 time:1603462ms
+step:7900/25000 train_loss:2.2299 grad_norm:0.1087 lr_scale:0.7880 muon_mom:0.9900 train_time:1623414ms step_avg:205.50ms
+  [TRAIN] step:7900 loss:2.2299 lr_scale:0.7880 grad_norm:0.1087 muon_mom:0.9900 time:1623414ms
+step:8000/25000 train_loss:2.2425 grad_norm:0.1300 lr_scale:0.7830 muon_mom:0.9900 train_time:1643400ms step_avg:205.42ms
+  [TRAIN] step:8000 loss:2.2425 lr_scale:0.7830 grad_norm:0.1300 muon_mom:0.9900 time:1643400ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+checkpoint:saved step:8000 path:checkpoints/ckpt_step08000.pt size:146.8MB
+step:8000/25000 val_loss:2.2714 val_bpb:1.3453 train_time:1646190ms step_avg:205.77ms
+step:8100/25000 train_loss:2.2759 grad_norm:0.1197 lr_scale:0.7779 muon_mom:0.9900 train_time:1666165ms step_avg:205.70ms
+  [TRAIN] step:8100 loss:2.2759 lr_scale:0.7779 grad_norm:0.1197 muon_mom:0.9900 time:1666165ms
+step:8200/25000 train_loss:2.3088 grad_norm:0.1340 lr_scale:0.7729 muon_mom:0.9900 train_time:1686017ms step_avg:205.61ms
+  [TRAIN] step:8200 loss:2.3088 lr_scale:0.7729 grad_norm:0.1340 muon_mom:0.9900 time:1686017ms
+step:8250/25000 val_loss:2.2667 val_bpb:1.3425 train_time:1695949ms step_avg:205.57ms
+step:8300/25000 train_loss:2.2989 grad_norm:0.1459 lr_scale:0.7677 muon_mom:0.9900 train_time:1705879ms step_avg:205.53ms
+  [TRAIN] step:8300 loss:2.2989 lr_scale:0.7677 grad_norm:0.1459 muon_mom:0.9900 time:1705879ms
+step:8400/25000 train_loss:2.3123 grad_norm:0.1103 lr_scale:0.7626 muon_mom:0.9900 train_time:1725867ms step_avg:205.46ms
+  [TRAIN] step:8400 loss:2.3123 lr_scale:0.7626 grad_norm:0.1103 muon_mom:0.9900 time:1725867ms
+step:8500/25000 train_loss:2.3098 grad_norm:0.1032 lr_scale:0.7573 muon_mom:0.9900 train_time:1745723ms step_avg:205.38ms
+  [TRAIN] step:8500 loss:2.3098 lr_scale:0.7573 grad_norm:0.1032 muon_mom:0.9900 time:1745723ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:8500/25000 val_loss:2.2659 val_bpb:1.3420 train_time:1747573ms step_avg:205.60ms
+step:8600/25000 train_loss:2.2725 grad_norm:0.1000 lr_scale:0.7521 muon_mom:0.9900 train_time:1767416ms step_avg:205.51ms
+  [TRAIN] step:8600 loss:2.2725 lr_scale:0.7521 grad_norm:0.1000 muon_mom:0.9900 time:1767416ms
+step:8700/25000 train_loss:2.2645 grad_norm:0.1123 lr_scale:0.7468 muon_mom:0.9900 train_time:1787279ms step_avg:205.43ms
+  [TRAIN] step:8700 loss:2.2645 lr_scale:0.7468 grad_norm:0.1123 muon_mom:0.9900 time:1787279ms
+step:8750/25000 val_loss:2.2621 val_bpb:1.3397 train_time:1797205ms step_avg:205.39ms
+step:8800/25000 train_loss:2.3549 grad_norm:0.0982 lr_scale:0.7415 muon_mom:0.9900 train_time:1807258ms step_avg:205.37ms
+  [TRAIN] step:8800 loss:2.3549 lr_scale:0.7415 grad_norm:0.0982 muon_mom:0.9900 time:1807258ms
+step:8900/25000 train_loss:2.1825 grad_norm:0.0996 lr_scale:0.7361 muon_mom:0.9900 train_time:1827115ms step_avg:205.29ms
+  [TRAIN] step:8900 loss:2.1825 lr_scale:0.7361 grad_norm:0.0996 muon_mom:0.9900 time:1827115ms
+step:9000/25000 train_loss:2.2481 grad_norm:0.1222 lr_scale:0.7308 muon_mom:0.9900 train_time:1846960ms step_avg:205.22ms
+  [TRAIN] step:9000 loss:2.2481 lr_scale:0.7308 grad_norm:0.1222 muon_mom:0.9900 time:1846960ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:9000/25000 val_loss:2.2615 val_bpb:1.3394 train_time:1848803ms step_avg:205.42ms
+step:9100/25000 train_loss:2.2727 grad_norm:0.1077 lr_scale:0.7253 muon_mom:0.9900 train_time:1868661ms step_avg:205.35ms
+  [TRAIN] step:9100 loss:2.2727 lr_scale:0.7253 grad_norm:0.1077 muon_mom:0.9900 time:1868661ms
+step:9200/25000 train_loss:2.1619 grad_norm:0.1019 lr_scale:0.7199 muon_mom:0.9900 train_time:1888620ms step_avg:205.28ms
+  [TRAIN] step:9200 loss:2.1619 lr_scale:0.7199 grad_norm:0.1019 muon_mom:0.9900 time:1888620ms
+step:9250/25000 val_loss:2.2585 val_bpb:1.3376 train_time:1898542ms step_avg:205.25ms
+step:9300/25000 train_loss:2.1938 grad_norm:0.1303 lr_scale:0.7144 muon_mom:0.9900 train_time:1908467ms step_avg:205.21ms
+  [TRAIN] step:9300 loss:2.1938 lr_scale:0.7144 grad_norm:0.1303 muon_mom:0.9900 time:1908467ms
+step:9400/25000 train_loss:2.2900 grad_norm:0.1070 lr_scale:0.7089 muon_mom:0.9900 train_time:1928317ms step_avg:205.14ms
+  [TRAIN] step:9400 loss:2.2900 lr_scale:0.7089 grad_norm:0.1070 muon_mom:0.9900 time:1928317ms
+step:9500/25000 train_loss:2.1539 grad_norm:0.1229 lr_scale:0.7034 muon_mom:0.9900 train_time:1948179ms step_avg:205.07ms
+  [TRAIN] step:9500 loss:2.1539 lr_scale:0.7034 grad_norm:0.1229 muon_mom:0.9900 time:1948179ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+step:9500/25000 val_loss:2.2588 val_bpb:1.3378 train_time:1950088ms step_avg:205.27ms
+step:9600/25000 train_loss:2.2549 grad_norm:0.1122 lr_scale:0.6978 muon_mom:0.9900 train_time:1970054ms step_avg:205.21ms
+  [TRAIN] step:9600 loss:2.2549 lr_scale:0.6978 grad_norm:0.1122 muon_mom:0.9900 time:1970054ms
+step:9700/25000 train_loss:2.3808 grad_norm:0.1095 lr_scale:0.6922 muon_mom:0.9900 train_time:1989896ms step_avg:205.14ms
+  [TRAIN] step:9700 loss:2.3808 lr_scale:0.6922 grad_norm:0.1095 muon_mom:0.9900 time:1989896ms
+step:9750/25000 val_loss:2.2560 val_bpb:1.3361 train_time:1999817ms step_avg:205.11ms
+step:9800/25000 train_loss:2.2285 grad_norm:0.1018 lr_scale:0.6866 muon_mom:0.9900 train_time:2009747ms step_avg:205.08ms
+  [TRAIN] step:9800 loss:2.2285 lr_scale:0.6866 grad_norm:0.1018 muon_mom:0.9900 time:2009747ms
+step:9900/25000 train_loss:2.3053 grad_norm:0.1144 lr_scale:0.6809 muon_mom:0.9900 train_time:2029592ms step_avg:205.01ms
+  [TRAIN] step:9900 loss:2.3053 lr_scale:0.6809 grad_norm:0.1144 muon_mom:0.9900 time:2029592ms
+  [T4] block[0] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.361568
+  [T4] block[1] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.263858
+  [T4] block[2] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.264921
+  [T4] block[3] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.300839
+  [T4] block[4] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.256155
+  [T4] block[5] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.137629
+  [T4] block[6] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.146470
+  [T4] block[7] momentum UPDATE: buf_norm=2.470284 buf_mean_abs=0.08565574 gate=0.014010
+
+  ──────────────────────────────────────────────────
+  FORWARD FLOW TRACE — step 10000
+  ──────────────────────────────────────────────────
+  [DEBUG] tok_emb output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=332.816742 min=-2.359375 max=2.171875 mean=0.001386 tokens_range=[1,1018]
+  [DEBUG] bigram output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=108.262459 min=-0.933594 max=1.132812 mean=-0.000363 
+  [DEBUG] spelling_bee output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=26.629429 min=-0.410156 max=0.382812 mean=-0.000314 
+  [DEBUG] after rms_norm: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=724.084961 min=-4.656250 max=4.531250 mean=0.001335 
+  [DEBUG] after smear: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=635.160706 min=-4.281250 max=3.875000 mean=0.001364 
+  [T4] block[0] momentum: buf_norm=2.470284, gate=0.3616, proj_norm=206.000000
+  [DEBUG]   [T4] block[0] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1082.786499 min=-7.031250 max=6.687500 mean=0.040879 
+  [DEBUG]   block[0] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=5308.384277 min=2768.000000 max=3456.000000 mean=3050.666748 
+  [T3] block[0] spatial_bias: gate_mean=0.4609, gate_std=0.0605, gate_range=[0.0654,0.7812]
+  [DEBUG]   block[0] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1082.786499 min=-7.031250 max=6.687500 mean=0.040879 
+  [T4] block[1] momentum: buf_norm=2.470284, gate=0.2639, proj_norm=173.000000
+  [DEBUG]   [T4] block[1] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1400.223267 min=-10.125000 max=9.312500 mean=0.081862 
+  [DEBUG]   block[1] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=5102.351074 min=1704.000000 max=3472.000000 mean=2834.666748 
+  [T3] block[1] spatial_bias: gate_mean=0.4980, gate_std=0.0728, gate_range=[0.0903,0.7695]
+  [DEBUG]   block[1] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1400.223267 min=-10.125000 max=9.312500 mean=0.081862 
+  [T4] block[2] momentum: buf_norm=2.470284, gate=0.2649, proj_norm=158.000000
+  [DEBUG]   [T4] block[2] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1726.683960 min=-13.375000 max=10.750000 mean=0.104910 
+  [DEBUG]   block[2] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4975.312012 min=1240.000000 max=3712.000000 mean=2674.666748 
+  [T3] block[2] spatial_bias: gate_mean=0.5430, gate_std=0.0640, gate_range=[0.1177,0.8789]
+  [DEBUG]   block[2] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=1726.683960 min=-13.375000 max=10.750000 mean=0.104910 
+  [T4] block[3] momentum: buf_norm=2.470284, gate=0.3008, proj_norm=157.000000
+  [DEBUG]   [T4] block[3] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2104.062500 min=-15.625000 max=14.312500 mean=0.129426 
+  [DEBUG]   block[3] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3976.653809 min=940.000000 max=2880.000000 mean=2132.000000 
+  [T3] block[3] spatial_bias: gate_mean=0.5312, gate_std=0.0605, gate_range=[0.1309,0.8359]
+  [DEBUG]   block[3] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2104.062500 min=-15.625000 max=14.312500 mean=0.129426 
+  [T4] block[4] momentum: buf_norm=2.470284, gate=0.2562, proj_norm=141.000000
+  [DEBUG]   [T4] block[4] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2397.012451 min=-18.500000 max=16.375000 mean=0.129505 
+  [DEBUG]   block[4] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3971.307129 min=884.000000 max=2832.000000 mean=2118.666748 
+  [T3] block[4] spatial_bias: gate_mean=0.5469, gate_std=0.0762, gate_range=[0.0967,0.9492]
+  [DEBUG]   block[4] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2397.012451 min=-18.500000 max=16.375000 mean=0.129505 
+  [T4] block[5] momentum: buf_norm=2.470284, gate=0.1376, proj_norm=123.000000
+  [DEBUG]   [T4] block[5] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2521.714355 min=-18.875000 max=17.750000 mean=0.122616 
+  [DEBUG]   block[5] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3805.766113 min=916.000000 max=2752.000000 mean=2044.000000 
+  [T3] block[5] spatial_bias: gate_mean=0.5508, gate_std=0.0688, gate_range=[0.1299,0.7344]
+  [DEBUG]   block[5] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2521.714355 min=-18.875000 max=17.750000 mean=0.122616 
+  [T4] block[6] momentum: buf_norm=2.470284, gate=0.1465, proj_norm=154.000000
+  [DEBUG]   [T4] block[6] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2699.294434 min=-20.500000 max=19.250000 mean=0.134703 
+  [DEBUG]   block[6] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=4004.517334 min=696.000000 max=3040.000000 mean=2082.666748 
+  [T3] block[6] spatial_bias: gate_mean=0.5469, gate_std=0.0439, gate_range=[0.1357,0.6875]
+  [DEBUG]   block[6] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2699.294434 min=-20.500000 max=19.250000 mean=0.134703 
+  [T4] block[7] momentum: buf_norm=2.470284, gate=0.0140, proj_norm=129.000000
+  [DEBUG]   [T4] block[7] after momentum: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2703.855469 min=-20.500000 max=19.250000 mean=0.136573 
+  [DEBUG]   block[7] Q/K/V norms: shape=(3,) dtype=torch.bfloat16 norm=3161.042969 min=608.000000 max=2272.000000 mean=1664.000000 
+  [T3] block[7] spatial_bias: gate_mean=0.5000, gate_std=0.0620, gate_range=[0.0518,0.6680]
+  [DEBUG]   block[7] output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2703.855469 min=-20.500000 max=19.250000 mean=0.136573 
+  [DEBUG] final_norm output: shape=(1, 1024, 512) dtype=torch.bfloat16 norm=2703.855469 min=-20.500000 max=19.250000 mean=0.136573 
+  ──────────────────────────────────────────────────
+
+
+  ──────────────────────────────────────────────────
+  GRADIENT FLOW TRACE — step 10000
+  ──────────────────────────────────────────────────
+  [GRAD] T2.spelling_bee.trigram_embed.weight: shape=(512, 32) g_norm=0.000142 g_max=0.000007 g_mean=0.00000004
+  [GRAD] T2.spelling_bee.char_embed.weight: shape=(512, 32) g_norm=0.000165 g_max=0.000012 g_mean=0.00000004
+  [GRAD] T2.spelling_bee.proj.weight: shape=(512, 32) g_norm=0.000274 g_max=0.000030 g_mean=-0.00000002
+  [GRAD] T2.spelling_bee.scale: shape=() g_norm=0.022174 g_max=0.022174 g_mean=0.02217354
+  [GRAD] T3.block[0].gate_embed.weight: shape=(2048, 8) g_norm=0.000497 g_max=0.000064 g_mean=-0.00000024
+  [GRAD] T3.block[1].gate_embed.weight: shape=(2048, 8) g_norm=0.000345 g_max=0.000031 g_mean=0.00000001
+  [GRAD] T3.block[2].gate_embed.weight: shape=(2048, 8) g_norm=0.000298 g_max=0.000019 g_mean=0.00000005
+  [GRAD] T3.block[3].gate_embed.weight: shape=(2048, 8) g_norm=0.000260 g_max=0.000036 g_mean=0.00000012
+  [GRAD] T3.block[4].gate_embed.weight: shape=(2048, 8) g_norm=0.000288 g_max=0.000024 g_mean=-0.00000006
+  [GRAD] T3.block[5].gate_embed.weight: shape=(2048, 8) g_norm=0.000364 g_max=0.000022 g_mean=-0.00000014
+  [GRAD] T3.block[6].gate_embed.weight: shape=(2048, 8) g_norm=0.000364 g_max=0.000020 g_mean=-0.00000008
+  [GRAD] T3.block[7].gate_embed.weight: shape=(2048, 8) g_norm=0.000460 g_max=0.000025 g_mean=-0.00000028
+  [GRAD] T4.block[0].momentum.proj.weight: shape=(512, 512) g_norm=0.000604 g_max=0.000018 g_mean=0.00000000
+  [GRAD] T4.block[0].momentum.gate: shape=(1,) g_norm=0.012665 g_max=0.012665 g_mean=-0.01266466
+  [GRAD] T4.block[1].momentum.proj.weight: shape=(512, 512) g_norm=0.000526 g_max=0.000021 g_mean=-0.00000000
+  [GRAD] T4.block[1].momentum.gate: shape=(1,) g_norm=0.005004 g_max=0.005004 g_mean=-0.00500369
+  [GRAD] T4.block[2].momentum.proj.weight: shape=(512, 512) g_norm=0.000426 g_max=0.000016 g_mean=-0.00000000
+  [GRAD] T4.block[2].momentum.gate: shape=(1,) g_norm=0.003814 g_max=0.003814 g_mean=-0.00381354
+  [GRAD] T4.block[3].momentum.proj.weight: shape=(512, 512) g_norm=0.000350 g_max=0.000010 g_mean=-0.00000000
+  [GRAD] T4.block[3].momentum.gate: shape=(1,) g_norm=0.002902 g_max=0.002902 g_mean=-0.00290175
+  [GRAD] T4.block[4].momentum.proj.weight: shape=(512, 512) g_norm=0.000317 g_max=0.000011 g_mean=-0.00000000
+  [GRAD] T4.block[4].momentum.gate: shape=(1,) g_norm=0.002835 g_max=0.002835 g_mean=-0.00283542
+  [GRAD] T4.block[5].momentum.proj.weight: shape=(512, 512) g_norm=0.000274 g_max=0.000011 g_mean=-0.00000000
+  [GRAD] T4.block[5].momentum.gate: shape=(1,) g_norm=0.001005 g_max=0.001005 g_mean=-0.00100477
+  [GRAD] T4.block[6].momentum.proj.weight: shape=(512, 512) g_norm=0.000334 g_max=0.000011 g_mean=-0.00000000
+  [GRAD] T4.block[6].momentum.gate: shape=(1,) g_norm=0.000894 g_max=0.000894 g_mean=-0.00089434
+  [GRAD] T4.block[7].momentum.proj.weight: shape=(512, 512) g_norm=0.000060 g_max=0.000002 g_mean=-0.00000000
+  [GRAD] T4.block[7].momentum.gate: shape=(1,) g_norm=0.000202 g_max=0.000202 g_mean=0.00020202
+  [GRAD] T9.tok_emb.weight: shape=(1024, 512) g_norm=0.081133 g_max=0.023193 g_mean=-0.00000006
+  [GRAD] BASE.bigram.embed.weight: shape=(2048, 64) g_norm=0.000705 g_max=0.000019 g_mean=0.00000000
+  [GRAD] BASE.bigram.proj.weight: shape=(512, 64) g_norm=0.000966 g_max=0.000073 g_mean=0.00000005
+  [GRAD] BASE.ve_shared.embed.weight: shape=(1024, 64) g_norm=0.001525 g_max=0.000376 g_mean=-0.00000008
+  [GRAD] BASE.ve_shared.proj.weight: shape=(256, 64) g_norm=0.000790 g_max=0.000031 g_mean=-0.00000003
+  ──────────────────────────────────────────────────
+
+  [T1] Weight Looping: bank size = (2*4, dim, dim) (period=4) — no dead rows to verify
+    qo_bank: shape=(8, 512, 512) — structurally shared, no breakage possible
+    kv_bank: shape=(8, 256, 512) — structurally shared, no breakage possible
+    mlp_gate_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_up_bank: shape=(4, 1280, 512) — structurally shared, no breakage possible
+    mlp_down_bank: shape=(4, 512, 1280) — structurally shared, no breakage possible
+step:10000/25000 train_loss:2.3056 grad_norm:0.1148 lr_scale:0.6753 muon_mom:0.9900 train_time:2049577ms step_avg:204.96ms
+  [TRAIN] step:10000 loss:2.3056 lr_scale:0.6753 grad_norm:0.1148 muon_mom:0.9900 time:2049577ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
+checkpoint:saved step:10000 path:checkpoints/ckpt_step10000.pt size:146.8MB
+step:10000/25000 val_loss:2.2500 val_bpb:1.3326 train_time:2052174ms step_avg:205.22ms
+step:10100/25000 train_loss:2.2431 grad_norm:0.1034 lr_scale:0.6696 muon_mom:0.9900 train_time:2072027ms step_avg:205.15ms
+  [TRAIN] step:10100 loss:2.2431 lr_scale:0.6696 grad_norm:0.1034 muon_mom:0.9900 time:2072027ms
+step:10200/25000 train_loss:2.2609 grad_norm:0.0998 lr_scale:0.6638 muon_mom:0.9900 train_time:2091896ms step_avg:205.09ms
+  [TRAIN] step:10200 loss:2.2609 lr_scale:0.6638 grad_norm:0.0998 muon_mom:0.9900 time:2091896ms
+step:10250/25000 val_loss:2.2472 val_bpb:1.3309 train_time:2101828ms step_avg:205.06ms
+step:10300/25000 train_loss:2.3133 grad_norm:0.1483 lr_scale:0.6581 muon_mom:0.9900 train_time:2111857ms step_avg:205.03ms
+  [TRAIN] step:10300 loss:2.3133 lr_scale:0.6581 grad_norm:0.1483 muon_mom:0.9900 time:2111857ms
+step:10400/25000 train_loss:2.2665 grad_norm:0.1381 lr_scale:0.6523 muon_mom:0.9900 train_time:2131726ms step_avg:204.97ms
+  [TRAIN] step:10400 loss:2.2665 lr_scale:0.6523 grad_norm:0.1381 muon_mom:0.9900 time:2131726ms
+step:10500/25000 train_loss:2.2293 grad_norm:0.1118 lr_scale:0.6465 muon_mom:0.9900 train_time:2151576ms step_avg:204.91ms
+  [TRAIN] step:10500 loss:2.2293 lr_scale:0.6465 grad_norm:0.1118 muon_mom:0.9900 time:2151576ms
+  [GRAPH] Failed to save 3_lr_gradnorm: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
+  [GRAPHS] Saved 11 graphs to logs/4d9a3a08-ae90-4921-9cd3-3f1fbc21ab36/graphs
